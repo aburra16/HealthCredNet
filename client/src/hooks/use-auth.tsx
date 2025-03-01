@@ -1,8 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { apiRequest } from '@/lib/queryClient';
-import { validateNostrKey, getNip07PublicKey } from '@/lib/nostr';
-import { connectToRelays, hasNip07Extension } from '@/lib/ndkClient';
+import { validateNostrKey, getNip07PublicKey, hasNip07Extension } from '@/lib/nostr';
+import { connectToRelays } from '@/lib/ndkClient';
 import { useToast } from '@/hooks/use-toast';
 
 interface User {
@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       // Ensure relay connection
-      await connectToRelays?.();
+      await connectToRelays();
       
       // Get public key from the extension
       const publicKey = await getNip07PublicKey();
