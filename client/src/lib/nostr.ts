@@ -29,17 +29,18 @@ export function validateNostrKey(key: string): boolean {
     // Validate npub
     if (key.startsWith('npub1')) {
       const decoded = nip19.decode(key);
-      return decoded.type === 'npub' && typeof decoded.data === 'string';
+      return decoded.type === 'npub';
     }
     
     // Validate nsec
     if (key.startsWith('nsec1')) {
       const decoded = nip19.decode(key);
-      return decoded.type === 'nsec' && typeof decoded.data === 'string';
+      return decoded.type === 'nsec';
     }
     
     return false;
   } catch (error) {
+    console.error('Error validating Nostr key:', error);
     return false;
   }
 }
@@ -49,13 +50,15 @@ export function getPublicKeyFromPrivate(nsecKey: string): string | null {
   try {
     if (!nsecKey.startsWith('nsec1')) return null;
     
-    // Decode the nsec key
+    // Decode the nsec key - this returns { type: 'nsec', data: Uint8Array }
     const decoded = nip19.decode(nsecKey);
-    if (decoded.type !== 'nsec' || typeof decoded.data !== 'string') return null;
     
-    // Get the public key hex from the private key hex
-    const privateKeyHex = decoded.data;
-    const publicKeyHex = getPublicKey(privateKeyHex);
+    // Check the type and data
+    if (decoded.type !== 'nsec') return null;
+    
+    // Get the public key from the private key
+    // In nostr-tools, getPublicKey() expects a Uint8Array
+    const publicKeyHex = getPublicKey(decoded.data);
     
     // Encode it back to npub format
     return nip19.npubEncode(publicKeyHex);

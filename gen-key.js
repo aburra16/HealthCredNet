@@ -1,4 +1,4 @@
-const { generateSecretKey, getPublicKey, nip19 } = require('nostr-tools');
+import { generateSecretKey, getPublicKey, nip19 } from 'nostr-tools';
 
 // Generate a new key pair
 const sk = generateSecretKey();
