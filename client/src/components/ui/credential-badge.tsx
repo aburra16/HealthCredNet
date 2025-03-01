@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { verifyNIP58Badge } from "@/lib/nostr";
-import { CheckCircle, Clock, XCircle, BadgeCheck } from "lucide-react";
+import { CheckCircle, Clock, XCircle, BadgeCheck, Shield, Award } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CredentialBadgeProps {
   type: string;
@@ -23,11 +24,11 @@ export default function CredentialBadge({
   const getStatusIcon = () => {
     switch (status) {
       case 'approved':
-        return <CheckCircle className="h-3 w-3 mr-1" />;
+        return <CheckCircle className="h-3.5 w-3.5 mr-1.5" />;
       case 'pending':
-        return <Clock className="h-3 w-3 mr-1" />;
+        return <Clock className="h-3.5 w-3.5 mr-1.5" />;
       case 'rejected':
-        return <XCircle className="h-3 w-3 mr-1" />;
+        return <XCircle className="h-3.5 w-3.5 mr-1.5" />;
       default:
         return null;
     }
@@ -36,40 +37,43 @@ export default function CredentialBadge({
   const getStatusColor = () => {
     switch (status) {
       case 'approved':
-        return "bg-green-100 text-green-800 hover:bg-green-100";
+        return "bg-emerald-50 text-emerald-700 border-emerald-200";
       case 'pending':
-        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100";
+        return "bg-amber-50 text-amber-700 border-amber-200";
       case 'rejected':
-        return "bg-red-100 text-red-800 hover:bg-red-100";
+        return "bg-red-50 text-red-700 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-50 text-gray-700 border-gray-200";
     }
   };
   
   return (
-    <div className={`bg-white rounded-md shadow-sm p-3 ${className}`}>
+    <div className={cn(
+      "visualens-card p-4 border border-gray-100 hover:shadow-md transition-all duration-300",
+      className
+    )}>
       <div className="flex items-start">
-        <div className="flex-shrink-0 pt-0.5">
-          <BadgeCheck className="h-5 w-5 text-accent-500" />
+        <div className="flex-shrink-0 bg-primary/10 p-2 rounded-lg">
+          <Award className="h-6 w-6 text-primary" />
         </div>
-        <div className="ml-3 flex-1">
-          <h4 className="text-sm font-medium text-gray-900">{type}</h4>
-          <p className="text-xs text-gray-500">Issued by: {issuingAuthority}</p>
+        <div className="ml-4 flex-1">
+          <h4 className="text-sm font-semibold text-foreground">{type}</h4>
+          <p className="text-xs text-muted-foreground mt-1">Issued by: {issuingAuthority}</p>
           {badgeId && (
-            <p className="text-xs text-gray-500 mt-1 truncate">
-              Badge ID: {badgeId.slice(0, 12)}...
+            <p className="text-xs text-muted-foreground/70 mt-0.5 font-mono">
+              {badgeId.slice(0, 8)}...{badgeId.slice(-8)}
             </p>
           )}
-          <div className="mt-2 flex flex-wrap gap-2">
-            <Badge variant="outline" className={getStatusColor()}>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Badge variant="outline" className={cn("rounded-md py-1 px-2.5 font-medium text-xs", getStatusColor())}>
               {getStatusIcon()}
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </Badge>
             
             {isVerified && (
-              <Badge variant="outline" className="bg-accent-100 text-accent-800 hover:bg-accent-100">
-                <BadgeCheck className="h-3 w-3 mr-1" />
-                Verified
+              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 rounded-md py-1 px-2.5 font-medium text-xs">
+                <Shield className="h-3.5 w-3.5 mr-1.5" />
+                Verified on Nostr
               </Badge>
             )}
           </div>
