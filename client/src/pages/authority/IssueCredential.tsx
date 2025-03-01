@@ -134,7 +134,7 @@ export default function IssueCredential() {
       
       <div className="mt-6 bg-white shadow overflow-hidden sm:rounded-md">
         <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Create New Credential Request</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900">Issue New Credential</h3>
           <p className="mt-1 text-sm text-gray-500">Issue a new credential for a healthcare provider</p>
           
           <div className="mt-5">
@@ -225,7 +225,7 @@ export default function IssueCredential() {
                 />
                 
                 <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? 'Creating...' : 'Create Credential Request'}
+                  {form.formState.isSubmitting ? 'Issuing...' : 'Issue Credential'}
                 </Button>
               </form>
             </Form>
@@ -235,7 +235,7 @@ export default function IssueCredential() {
       
       <div className="mt-10">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Credential Requests</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900">Credential Management</h3>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-500">Filter:</span>
             <select
@@ -257,7 +257,7 @@ export default function IssueCredential() {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
             </div>
           ) : requests?.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">No credential requests found</div>
+            <div className="p-4 text-center text-gray-500">No credentials found</div>
           ) : (
             <ul className="divide-y divide-gray-200">
               {requests?.map((request: any) => (
