@@ -118,7 +118,7 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
       });
       
       // Invalidate queries to refetch data
-      queryClient.invalidateQueries({ queryKey: ['/api/credentials/requests'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/credential-requests'] });
       
       toast({
         title: "Credential approved",
@@ -150,7 +150,7 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
       });
       
       // Invalidate queries to refetch data
-      queryClient.invalidateQueries({ queryKey: ['/api/credentials/requests'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/credential-requests'] });
       
       toast({
         title: "Credential rejected",
