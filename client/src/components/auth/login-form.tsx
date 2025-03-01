@@ -109,20 +109,10 @@ export default function LoginForm() {
         return;
       }
       
-      const publicKey = await getNip07PublicKey();
-      if (!publicKey) {
-        toast({
-          title: "Extension error",
-          description: "Failed to get public key from your Nostr extension",
-          variant: "destructive"
-        });
-        setLoadingExtension(false);
-        return;
-      }
+      // Use the loginWithNip07 function from auth.ts which handles all the details
+      // including connecting to relays and using the extension for signing
+      await login.loginWithNip07(role);
       
-      // Use empty string for privateKey - with NIP-07 extension, we don't need it
-      // as the extension will handle the signing
-      await login(publicKey, "", role);
     } catch (error) {
       console.error("Extension login failed:", error);
       toast({

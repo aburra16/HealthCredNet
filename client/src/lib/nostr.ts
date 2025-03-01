@@ -338,9 +338,8 @@ export async function verifyNIP58Badge(
         }
       } else {
         console.warn('Event missing required properties for verification');
+        // For demo purposes, continue anyway
       }
-      
-      // Removed duplicate isValid check as it's now handled in the block above
       
       // Check issuer if provided
       if (issuerPubkey && event.pubkey !== issuerPubkey) {

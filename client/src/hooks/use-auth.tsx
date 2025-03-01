@@ -1,7 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { apiRequest } from '@/lib/queryClient';
-import { validateNostrKey } from '@/lib/nostr';
+import { validateNostrKey, getNip07PublicKey } from '@/lib/nostr';
+import { connectToRelays, hasNip07Extension } from '@/lib/ndkClient';
 import { useToast } from '@/hooks/use-toast';
 
 interface User {
@@ -21,6 +22,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (nostrPubkey: string, nostrPrivkey: string, role: string) => Promise<void>;
+  loginWithNip07: (role: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 }
