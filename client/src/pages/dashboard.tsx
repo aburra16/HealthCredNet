@@ -13,12 +13,14 @@ export default function Dashboard() {
   const { user, isAuthenticated } = useAuth();
   const [location, setLocation] = useLocation();
   
-  // Redirect to home if not authenticated
+  // Redirect if not authenticated or if user is authority (they have dedicated routes)
   useEffect(() => {
     if (!isAuthenticated) {
       setLocation("/");
+    } else if (user?.role === 'authority') {
+      setLocation("/authority/dashboard");
     }
-  }, [isAuthenticated, setLocation]);
+  }, [isAuthenticated, user, setLocation]);
   
   // Determine which component to render based on user role
   const renderRoleBasedContent = () => {

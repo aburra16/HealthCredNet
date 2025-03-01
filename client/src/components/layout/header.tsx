@@ -72,21 +72,21 @@ export default function Header() {
               {/* Authority navigation */}
               {user.role === 'authority' && (
                 <div className="flex space-x-4">
-                  <Link href="/dashboard"
+                  <Link href="/authority/dashboard"
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      location === '/authority/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       Dashboard
                   </Link>
-                  <Link href="/dashboard/issue"
+                  <Link href="/authority/issue"
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/dashboard/issue' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      location === '/authority/issue' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       Issue Credentials
                   </Link>
-                  <Link href="/dashboard/audit"
+                  <Link href="/authority/audit-logs"
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/dashboard/audit' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      location === '/authority/audit-logs' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       Audit Logs
                   </Link>
@@ -114,7 +114,7 @@ export default function Header() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <Link href="/dashboard/profile">
+                    <Link href={user.role === 'authority' ? '/authority/profile' : '/dashboard/profile'}>
                       <DropdownMenuItem>
                         <UserCircle className="mr-2 h-4 w-4" />
                         <span>Profile</span>

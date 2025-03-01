@@ -108,7 +108,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setUser(userData);
       setIsAuthenticated(true);
-      setLocation('/dashboard');
+      
+      // Redirect based on role
+      if (userData.role === 'authority') {
+        setLocation('/authority/dashboard');
+      } else if (userData.role === 'provider') {
+        setLocation('/dashboard');
+      } else {
+        setLocation('/dashboard');
+      }
       
       toast({
         title: "Login Successful",
