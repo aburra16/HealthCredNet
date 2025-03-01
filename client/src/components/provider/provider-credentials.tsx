@@ -237,7 +237,7 @@ export default function ProviderCredentials() {
                     <SelectValue placeholder="Select a credential type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Select a credential type</SelectItem>
+                    <SelectItem value="select">Select a credential type</SelectItem>
                     {credentialTypes?.map(type => (
                       <SelectItem key={type} value={type}>
                         {type}

@@ -188,7 +188,7 @@ export default function SearchProviders() {
                   <SelectValue placeholder="All Specialties" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Specialties</SelectItem>
+                  <SelectItem value="all">All Specialties</SelectItem>
                   {specialties?.map(specialty => (
                     <SelectItem key={specialty} value={specialty}>
                       {specialty}
