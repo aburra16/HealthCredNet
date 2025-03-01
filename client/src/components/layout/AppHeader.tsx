@@ -22,7 +22,7 @@ export default function AppHeader({ userRole }: AppHeaderProps) {
     authority: [
       { name: 'Dashboard', path: '/authority/dashboard', active: location === '/authority/dashboard' },
       { name: 'Issue Credentials', path: '/authority/issue', active: location === '/authority/issue' },
-      { name: 'Audit Logs', path: '/authority/audit', active: location === '/authority/audit' }
+      { name: 'Audit Logs', path: '/authority/audit-logs', active: location === '/authority/audit-logs' }
     ],
     provider: [
       { name: 'My Profile', path: '/provider/profile', active: location === '/provider/profile' },
@@ -49,16 +49,16 @@ export default function AppHeader({ userRole }: AppHeaderProps) {
             </div>
             <nav className="ml-6 flex space-x-8" role="navigation">
               {links.map((link) => (
-                <Link key={link.path} href={link.path}>
-                  <a
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      link.active
-                        ? 'border-primary-500 text-gray-900'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    {link.name}
-                  </a>
+                <Link 
+                  key={link.path} 
+                  href={link.path}
+                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                    link.active
+                      ? 'border-primary-500 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  {link.name}
                 </Link>
               ))}
             </nav>
@@ -91,10 +91,12 @@ export default function AppHeader({ userRole }: AppHeaderProps) {
                     <div className="font-medium">{auth.name || 'User'}</div>
                     <div className="text-xs text-gray-500 truncate">{auth.publicKey}</div>
                   </div>
-                  <Link href={`/${userRole}/profile`}>
-                    <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Your Profile
-                    </a>
+                  <Link 
+                    href={`/${userRole}/profile`} 
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+                    role="menuitem"
+                  >
+                    Your Profile
                   </Link>
                   <a
                     href="#"
