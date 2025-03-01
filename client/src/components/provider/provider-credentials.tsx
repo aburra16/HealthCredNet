@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -48,6 +48,24 @@ export default function ProviderCredentials() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
+  // Debug logging for component
+  useEffect(() => {
+    console.log("ProviderCredentials component mounted");
+    console.log("Current authenticated user:", user);
+    
+    return () => {
+      console.log("ProviderCredentials component unmounted");
+    };
+  }, []);
+  
+  // Track changes to user
+  useEffect(() => {
+    console.log("User state changed:", user);
+    if (user) {
+      console.log("Provider ID for requests:", user.id);
+    }
+  }, [user]);
+  
   // Form state
   const [credentialType, setCredentialType] = useState("");
   const [issuingAuthority, setIssuingAuthority] = useState("");
@@ -83,9 +101,32 @@ export default function ProviderCredentials() {
   const submitRequestMutation = useMutation({
     mutationFn: async (requestData: CredentialRequestData) => {
       console.log("Submitting data to API:", requestData);
-      return await apiRequest('POST', '/api/credential-requests', requestData);
+      
+      try {
+        const response = await fetch('/api/credential-requests', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Error response:", response.status, errorText);
+          throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+      }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Request created successfully:", data);
+      
       // Reset form
       setCredentialType("");
       setIssuingAuthority("");
@@ -102,11 +143,11 @@ export default function ProviderCredentials() {
       // Refresh data
       queryClient.invalidateQueries({ queryKey: [`/api/credential-requests?providerId=${user?.id}`] });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Failed to submit request", error);
       toast({
         title: "Submission Failed",
-        description: "There was an error submitting your request. Please try again.",
+        description: `There was an error submitting your request: ${error.message || "Please try again."}`,
         variant: "destructive"
       });
     }
