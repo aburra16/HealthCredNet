@@ -76,6 +76,13 @@ export const insertCredentialRequestSchema = createInsertSchema(credentialReques
   createdAt: true,
 });
 
+// Schema for updating credential requests, including review fields
+export const updateCredentialRequestSchema = createInsertSchema(credentialRequests).pick({
+  status: true,
+  reviewedAt: true,
+  reviewedById: true,
+});
+
 // Audit log model
 export const auditLogs = pgTable("audit_logs", {
   id: serial("id").primaryKey(),

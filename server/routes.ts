@@ -5,7 +5,8 @@ import { z } from "zod";
 import { 
   insertUserSchema, 
   insertCredentialSchema, 
-  insertCredentialRequestSchema, 
+  insertCredentialRequestSchema,
+  updateCredentialRequestSchema,
   insertAuditLogSchema,
   SPECIALTIES,
   CREDENTIAL_TYPES,
@@ -246,25 +247,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   router.patch('/credential-requests/:id', async (req: Request, res: Response) => {
     try {
       const requestId = parseInt(req.params.id);
-      const { status, reviewedById } = req.body;
+      
+      // Parse and validate the update data
+      const updateData = updateCredentialRequestSchema.parse({
+        status: req.body.status,
+        reviewedAt: new Date(),
+        reviewedById: req.body.reviewedById
+      });
       
       // Update the request
-      const updatedRequest = await storage.updateCredentialRequest(requestId, {
-        status,
-        reviewedAt: new Date(),
-        reviewedById
-      });
+      const updatedRequest = await storage.updateCredentialRequest(requestId, updateData);
       
       if (!updatedRequest) {
         return res.status(404).json({ error: 'Credential request not found' });
       }
       
       // If approved, create the credential
-      if (status === 'approved' && req.body.badgeId) {
+      if (updateData.status === 'approved' && req.body.badgeId) {
         const credential = await storage.createCredential({
           providerId: updatedRequest.providerId,
           type: updatedRequest.type,
-          issuerId: reviewedById,
+          issuerId: updateData.reviewedById || 0,
           status: 'approved',
           badgeId: req.body.badgeId,
           issuingAuthority: updatedRequest.issuingAuthority,
@@ -275,7 +278,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // Create audit log
         await storage.createAuditLog({
-          userId: reviewedById,
+          userId: updateData.reviewedById || 0,
           action: 'issue_credential',
           targetId: credential.id,
           details: `Issued ${updatedRequest.type} credential for provider ${updatedRequest.providerId}`,
@@ -286,9 +289,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Create audit log for rejection
-      if (status === 'rejected') {
+      if (updateData.status === 'rejected') {
         await storage.createAuditLog({
-          userId: reviewedById,
+          userId: updateData.reviewedById || 0,
           action: 'reject_credential_request',
           targetId: requestId,
           details: `Rejected ${updatedRequest.type} credential request for provider ${updatedRequest.providerId}`,
