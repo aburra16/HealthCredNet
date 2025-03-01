@@ -72,6 +72,42 @@ export function validateNostrKey(key: string): boolean {
   }
 }
 
+// Validate a Nostr public key
+export function validatePublicKey(key: string): boolean {
+  if (!key) return false;
+  
+  try {
+    // Validate npub
+    if (key.startsWith('npub1')) {
+      const decoded = nip19.decode(key);
+      return decoded.type === 'npub';
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Error validating Nostr public key:', error);
+    return false;
+  }
+}
+
+// Validate a Nostr private key
+export function validatePrivateKey(key: string): boolean {
+  if (!key) return false;
+  
+  try {
+    // Validate nsec
+    if (key.startsWith('nsec1')) {
+      const decoded = nip19.decode(key);
+      return decoded.type === 'nsec';
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Error validating Nostr private key:', error);
+    return false;
+  }
+}
+
 // Extract public key from private key
 export function getPublicKeyFromPrivate(nsecKey: string): string | null {
   try {

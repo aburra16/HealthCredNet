@@ -67,8 +67,8 @@ export default function ProviderCredentials() {
   });
   
   // Fetch credential types
-  const { data: credentialTypes } = useQuery<string[]>({
-    queryKey: ['/api/credential-types'],
+  const { data: credentialTypes, isLoading: isLoadingCredentialTypes } = useQuery({
+    queryKey: ['/api/credential-types']
   });
   
   // Submit credential request
@@ -106,24 +106,38 @@ export default function ProviderCredentials() {
   const handleSubmitRequest = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) return;
+    if (!user || !user.id) {
+      toast({
+        title: "Authentication Error",
+        description: "You must be logged in as a provider to request credentials.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Validate form
     if (!credentialType || !issuingAuthority) {
       toast({
         title: "Missing Information",
-        description: "Please fill in all required fields.",
+        description: "Please select a credential type and enter the issuing authority.",
         variant: "destructive"
       });
       return;
     }
+    
+    console.log("Submitting credential request with data:", {
+      providerId: user.id,
+      type: credentialType,
+      issuingAuthority,
+      details: details || null
+    });
     
     // Submit request
     submitRequestMutation.mutate({
       providerId: user.id,
       type: credentialType,
       issuingAuthority,
-      details
+      details: details || null
     });
   };
   
@@ -232,17 +246,22 @@ export default function ProviderCredentials() {
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-6 sm:col-span-3">
                 <Label htmlFor="credential-type">Credential Type</Label>
-                <Select value={credentialType} onValueChange={setCredentialType}>
+                <Select value={credentialType} onValueChange={setCredentialType} disabled={isLoadingCredentialTypes}>
                   <SelectTrigger id="credential-type" className="mt-1">
-                    <SelectValue placeholder="Select a credential type" />
+                    <SelectValue placeholder={isLoadingCredentialTypes ? "Loading..." : "Select a credential type"} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="select">Select a credential type</SelectItem>
-                    {credentialTypes?.map(type => (
-                      <SelectItem key={type} value={type}>
-                        {type}
+                    {Array.isArray(credentialTypes) && credentialTypes.length > 0 ? (
+                      credentialTypes.map((type: string) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem value="loading" disabled>
+                        {isLoadingCredentialTypes ? "Loading credential types..." : "No credential types available"}
                       </SelectItem>
-                    ))}
+                    )}
                   </SelectContent>
                 </Select>
               </div>
