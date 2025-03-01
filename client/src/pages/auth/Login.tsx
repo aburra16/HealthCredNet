@@ -467,6 +467,51 @@ export default function Login() {
                   Your keys are never stored on our servers
                 </p>
               </div>
+              
+              {/* Authority Token Field - Only shown for authority role */}
+              {loginType === 'authority' && (
+                <div>
+                  <label htmlFor="authority-token" className="block text-sm font-medium text-foreground">
+                    Auth Token
+                    <span className="text-xs text-red-500 ml-1">(required)</span>
+                  </label>
+                  <div className="mt-1.5 relative">
+                    <input
+                      type={showToken ? "text" : "password"}
+                      id="authority-token"
+                      className="form-input text-sm pr-10"
+                      placeholder="Authentication token"
+                      value={authorityToken}
+                      onChange={(e) => setAuthorityToken(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      onClick={() => setShowToken(!showToken)}
+                    >
+                      {showToken ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                          <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-amber-600 flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1.5 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    This token is required for authority access
+                  </p>
+                </div>
+              )}
 
               <div>
                 <Button
