@@ -65,6 +65,7 @@ export default function Login() {
     // Check for authority role with hardcoded key requirement
     if (loginType === 'authority') {
       const nosFabricaTestNsec = 'nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum';
+      const nosFabricaTestPubkey = 'npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu';
       
       // Strictly check private key for authority logins
       if (!privateKey) {
@@ -91,6 +92,15 @@ export default function Login() {
       }
       
       console.log("NosFabricaTest credentials verified");
+      
+      // Override the public key with the NosFabricaTest public key
+      // This ensures we're using the correct key pair
+      setPublicKey(nosFabricaTestPubkey);
+      
+      // Auto-fill the token when correct nsec is provided
+      if (!authorityToken) {
+        setAuthorityToken("nosfabrica-test-9876543210");
+      }
     }
     
     setIsLoading(true);
@@ -370,7 +380,13 @@ export default function Login() {
                     <line x1="12" y1="8" x2="12" y2="12"></line>
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                   </svg>
-                  <span>Authority login is restricted to <strong>NosFabricaTest</strong> only. Manual login with the correct nsec key is required.</span>
+                  <span>
+                    Authority login is restricted to <strong>NosFabricaTest</strong> only.
+                    <br/>
+                    <span className="mt-1 inline-block">
+                      Use nsec key: <strong>nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum</strong>
+                    </span>
+                  </span>
                 </div>
               </div>
             </TabsContent>
