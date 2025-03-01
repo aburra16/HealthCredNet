@@ -66,16 +66,24 @@ export default function ProviderCredentials() {
     enabled: !!user?.id,
   });
   
-  // Fetch credential types
-  const { data: credentialTypes, isLoading: isLoadingCredentialTypes } = useQuery({
+  // Fetch credential types with explicit typing
+  const { data: credentialTypes, isLoading: isLoadingCredentialTypes } = useQuery<string[]>({
     queryKey: ['/api/credential-types']
   });
   
+  // Define request data type
+  interface CredentialRequestData {
+    providerId: number;
+    type: string;
+    issuingAuthority: string;
+    details: string | null;
+  }
+  
   // Submit credential request
   const submitRequestMutation = useMutation({
-    mutationFn: async (requestData: any) => {
-      const response = await apiRequest('POST', '/api/credential-requests', requestData);
-      return await response.json();
+    mutationFn: async (requestData: CredentialRequestData) => {
+      console.log("Submitting data to API:", requestData);
+      return await apiRequest('POST', '/api/credential-requests', requestData);
     },
     onSuccess: () => {
       // Reset form
@@ -88,6 +96,7 @@ export default function ProviderCredentials() {
       toast({
         title: "Request Submitted",
         description: "Your credential request has been submitted for review.",
+        variant: "default"
       });
       
       // Refresh data
@@ -323,16 +332,24 @@ export default function ProviderCredentials() {
             
             <div className="mt-6 flex justify-end">
               <Button 
-                type="submit" 
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm"
                 disabled={submitRequestMutation.isPending}
               >
                 {submitRequestMutation.isPending ? (
-                  <>
+                  <div className="flex items-center">
                     <Clock className="animate-spin mr-2 h-4 w-4" />
-                    Submitting...
-                  </>
+                    <span>Submitting...</span>
+                  </div>
                 ) : (
-                  "Submit Request"
+                  <div className="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                      <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                      <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    <span>Submit Request</span>
+                  </div>
                 )}
               </Button>
             </div>
