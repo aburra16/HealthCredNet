@@ -72,10 +72,8 @@ export default function AuthorityDashboard() {
             </div>
             <div className="bg-gray-50 px-4 py-4 sm:px-6">
               <div className="text-sm">
-                <Link href="/authority/providers">
-                  <a className="font-medium text-primary-600 hover:text-primary-500">
-                    View all providers <span aria-hidden="true">&rarr;</span>
-                  </a>
+                <Link href="/authority/providers" className="font-medium text-primary-600 hover:text-primary-500">
+                  View all providers <span aria-hidden="true">&rarr;</span>
                 </Link>
               </div>
             </div>
@@ -104,10 +102,8 @@ export default function AuthorityDashboard() {
             </div>
             <div className="bg-gray-50 px-4 py-4 sm:px-6">
               <div className="text-sm">
-                <Link href="/authority/issue">
-                  <a className="font-medium text-primary-600 hover:text-primary-500">
-                    View all credentials <span aria-hidden="true">&rarr;</span>
-                  </a>
+                <Link href="/authority/issue" className="font-medium text-primary-600 hover:text-primary-500">
+                  View all credentials <span aria-hidden="true">&rarr;</span>
                 </Link>
               </div>
             </div>
@@ -136,10 +132,8 @@ export default function AuthorityDashboard() {
             </div>
             <div className="bg-gray-50 px-4 py-4 sm:px-6">
               <div className="text-sm">
-                <Link href="/authority/issue">
-                  <a className="font-medium text-primary-600 hover:text-primary-500">
-                    Review pending requests <span aria-hidden="true">&rarr;</span>
-                  </a>
+                <Link href="/authority/issue" className="font-medium text-primary-600 hover:text-primary-500">
+                  Review pending requests <span aria-hidden="true">&rarr;</span>
                 </Link>
               </div>
             </div>
