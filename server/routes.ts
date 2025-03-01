@@ -1,0 +1,283 @@
+import express, { type Express, Request, Response } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import { z } from "zod";
+import { 
+  insertUserSchema, 
+  insertCredentialSchema, 
+  insertCredentialRequestSchema, 
+  insertAuditLogSchema,
+  SPECIALTIES,
+  CREDENTIAL_TYPES
+} from "@shared/schema";
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  const router = express.Router();
+  
+  // User routes
+  router.get('/users', async (req: Request, res: Response) => {
+    try {
+      const users = await storage.getUsers();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch users' });
+    }
+  });
+  
+  router.get('/users/:id', async (req: Request, res: Response) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch user' });
+    }
+  });
+  
+  router.post('/users', async (req: Request, res: Response) => {
+    try {
+      const userData = insertUserSchema.parse(req.body);
+      
+      // Check if user with the same public key already exists
+      const existingUser = await storage.getUserByNostrPubkey(userData.nostrPubkey);
+      if (existingUser) {
+        return res.status(400).json({ error: 'User with this nostr public key already exists' });
+      }
+      
+      const user = await storage.createUser(userData);
+      res.status(201).json(user);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: error.errors });
+      }
+      res.status(500).json({ error: 'Failed to create user' });
+    }
+  });
+  
+  router.patch('/users/:id', async (req: Request, res: Response) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const updates = req.body;
+      
+      const updatedUser = await storage.updateUser(userId, updates);
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update user' });
+    }
+  });
+  
+  // Provider routes
+  router.get('/providers', async (req: Request, res: Response) => {
+    try {
+      const specialty = req.query.specialty as string | undefined;
+      const providers = await storage.getProviders(specialty);
+      res.json(providers);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch providers' });
+    }
+  });
+  
+  // Authentication route (mock for now)
+  router.post('/auth/login', async (req: Request, res: Response) => {
+    try {
+      const { nostrPubkey, role } = req.body;
+      
+      if (!nostrPubkey) {
+        return res.status(400).json({ error: 'Nostr public key is required' });
+      }
+      
+      // Check if user exists
+      let user = await storage.getUserByNostrPubkey(nostrPubkey);
+      
+      // Auto-create user if not exists (for demo purposes)
+      if (!user) {
+        user = await storage.createUser({
+          username: `user_${Math.floor(Math.random() * 10000)}`,
+          displayName: `New ${role.charAt(0).toUpperCase() + role.slice(1)}`,
+          role,
+          nostrPubkey,
+          location: '',
+          specialty: '',
+          institution: '',
+          about: '',
+          avatar: '',
+        });
+      }
+      
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Authentication failed' });
+    }
+  });
+  
+  // Credential routes
+  router.get('/credentials', async (req: Request, res: Response) => {
+    try {
+      const providerId = req.query.providerId ? parseInt(req.query.providerId as string) : undefined;
+      
+      if (providerId) {
+        const credentials = await storage.getCredentialsByProvider(providerId);
+        return res.json(credentials);
+      }
+      
+      // Return empty array if no provider ID is specified
+      res.json([]);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch credentials' });
+    }
+  });
+  
+  router.post('/credentials', async (req: Request, res: Response) => {
+    try {
+      const credentialData = insertCredentialSchema.parse(req.body);
+      
+      const credential = await storage.createCredential(credentialData);
+      
+      // Create audit log
+      await storage.createAuditLog({
+        userId: credentialData.issuerId,
+        action: 'create_credential',
+        targetId: credential.id,
+        details: `Created ${credentialData.type} credential for provider ${credentialData.providerId}`,
+        timestamp: new Date()
+      });
+      
+      res.status(201).json(credential);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: error.errors });
+      }
+      res.status(500).json({ error: 'Failed to create credential' });
+    }
+  });
+  
+  // Credential request routes
+  router.get('/credential-requests', async (req: Request, res: Response) => {
+    try {
+      const providerId = req.query.providerId ? parseInt(req.query.providerId as string) : undefined;
+      
+      if (providerId) {
+        const requests = await storage.getCredentialRequestsByProvider(providerId);
+        return res.json(requests);
+      }
+      
+      // Return pending requests if no provider ID is specified
+      const pendingRequests = await storage.getPendingCredentialRequests();
+      res.json(pendingRequests);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch credential requests' });
+    }
+  });
+  
+  router.post('/credential-requests', async (req: Request, res: Response) => {
+    try {
+      const requestData = insertCredentialRequestSchema.parse({
+        ...req.body,
+        status: 'pending',
+        createdAt: new Date()
+      });
+      
+      const request = await storage.createCredentialRequest(requestData);
+      res.status(201).json(request);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: error.errors });
+      }
+      res.status(500).json({ error: 'Failed to create credential request' });
+    }
+  });
+  
+  router.patch('/credential-requests/:id', async (req: Request, res: Response) => {
+    try {
+      const requestId = parseInt(req.params.id);
+      const { status, reviewedById } = req.body;
+      
+      // Update the request
+      const updatedRequest = await storage.updateCredentialRequest(requestId, {
+        status,
+        reviewedAt: new Date(),
+        reviewedById
+      });
+      
+      if (!updatedRequest) {
+        return res.status(404).json({ error: 'Credential request not found' });
+      }
+      
+      // If approved, create the credential
+      if (status === 'approved' && req.body.badgeId) {
+        const credential = await storage.createCredential({
+          providerId: updatedRequest.providerId,
+          type: updatedRequest.type,
+          issuerId: reviewedById,
+          status: 'approved',
+          badgeId: req.body.badgeId,
+          issuingAuthority: updatedRequest.issuingAuthority,
+          details: updatedRequest.details,
+          issuedAt: new Date(),
+          expiresAt: req.body.expiresAt ? new Date(req.body.expiresAt) : undefined
+        });
+        
+        // Create audit log
+        await storage.createAuditLog({
+          userId: reviewedById,
+          action: 'issue_credential',
+          targetId: credential.id,
+          details: `Issued ${updatedRequest.type} credential for provider ${updatedRequest.providerId}`,
+          timestamp: new Date()
+        });
+        
+        return res.json({ request: updatedRequest, credential });
+      }
+      
+      // Create audit log for rejection
+      if (status === 'rejected') {
+        await storage.createAuditLog({
+          userId: reviewedById,
+          action: 'reject_credential_request',
+          targetId: requestId,
+          details: `Rejected ${updatedRequest.type} credential request for provider ${updatedRequest.providerId}`,
+          timestamp: new Date()
+        });
+      }
+      
+      res.json({ request: updatedRequest });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update credential request' });
+    }
+  });
+  
+  // Audit log routes
+  router.get('/audit-logs', async (req: Request, res: Response) => {
+    try {
+      const logs = await storage.getAuditLogs();
+      res.json(logs);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch audit logs' });
+    }
+  });
+  
+  // Metadata routes
+  router.get('/specialties', (_req: Request, res: Response) => {
+    res.json(SPECIALTIES);
+  });
+  
+  router.get('/credential-types', (_req: Request, res: Response) => {
+    res.json(CREDENTIAL_TYPES);
+  });
+  
+  // Register the router
+  app.use('/api', router);
+  
+  const httpServer = createServer(app);
+  
+  return httpServer;
+}
