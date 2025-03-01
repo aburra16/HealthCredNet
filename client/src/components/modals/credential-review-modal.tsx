@@ -116,22 +116,54 @@ export default function CredentialReviewModal({
     }
   });
   
-  const handleApprove = () => {
-    // Simplify the process - don't try to create a real badge on first attempt
-    // Just use a reliable mock badge ID that will always work
+  const handleApprove = async () => {
     setIsProcessing(true);
     
     if (provider && user) {
       try {
-        // Use entered badge ID if provided, otherwise generate a mock one
+        // Use entered badge ID if provided
         let useBadgeId = badgeId.trim();
+        let isRealBadge = false;
         
+        // If no badge ID is provided, try to create a real one first
         if (!useBadgeId) {
-          // Generate a guaranteed-to-work mock badge ID
-          const timestamp = Math.floor(Date.now() / 1000);
-          const randomPart = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-          useBadgeId = `mock_badge_${request.type.replace(/\s+/g, '_')}_${timestamp}_${randomPart}`;
-          console.log("Using mock badge ID:", useBadgeId);
+          try {
+            console.log("Attempting to create a real NIP-58 badge...");
+            
+            // Create badge info
+            const badgeInfo = {
+              name: `${request.type} Certification`,
+              description: `${request.type} credential issued by ${request.issuingAuthority}`,
+              image: "",
+              thumbs: []
+            };
+            
+            // Get the private key or use extension
+            const privateKey = localStorage.getItem('medcred_privkey') || '';
+            
+            // Attempt to create real NIP-58 badge
+            const realBadgeId = await createNIP58Badge(
+              privateKey,
+              provider.nostrPubkey,
+              badgeInfo
+            );
+            
+            if (realBadgeId) {
+              useBadgeId = realBadgeId;
+              isRealBadge = true;
+              console.log("Successfully created real NIP-58 badge with ID:", useBadgeId);
+            } else {
+              throw new Error("Failed to create real badge");
+            }
+          } catch (err) {
+            console.error("Error creating real badge, using fallback:", err);
+            
+            // Generate a guaranteed-to-work mock badge ID on failure
+            const timestamp = Math.floor(Date.now() / 1000);
+            const randomPart = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+            useBadgeId = `mock_badge_${request.type.replace(/\s+/g, '_')}_${timestamp}_${randomPart}`;
+            console.log("Using mock badge ID:", useBadgeId);
+          }
         }
         
         // Approve the credential with the badge ID
@@ -139,6 +171,15 @@ export default function CredentialReviewModal({
           status: 'approved',
           badgeId: useBadgeId
         });
+        
+        // Optional: Show different messages based on badge type
+        if (isRealBadge) {
+          toast({
+            title: "Real Badge Created",
+            description: "Successfully created a real NIP-58 badge on the Nostr network!",
+            variant: "default"
+          });
+        }
       } catch (error) {
         console.error("Error in approval process:", error);
         toast({

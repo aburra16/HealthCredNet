@@ -70,17 +70,50 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
     setIsSubmitting(true);
     
     try {
-      // Generate a reliable mock badge ID that will always work
-      const timestamp = Math.floor(Date.now() / 1000);
-      const randomPart = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-      const generatedBadgeId = `mock_badge_${badgeDetails.name.replace(/\s+/g, '_')}_${timestamp}_${randomPart}`;
+      let badgeId = "";
+      let isRealBadge = false;
       
-      console.log("Using reliable mock badge ID:", generatedBadgeId);
+      // First try to create a real NIP-58 badge
+      if (hasNip07Extension() || privateKey) {
+        try {
+          console.log("Attempting to create a real NIP-58 badge...");
+          
+          // Get provider's Nostr public key
+          const subjectPubkey = request.providerPublicKey || "";
+          
+          if (subjectPubkey) {
+            // Create the badge
+            const createdBadgeId = await createNIP58Badge(
+              issuingMethod === "extension" ? "" : privateKey, // Empty string for extension
+              subjectPubkey,
+              badgeDetails
+            );
+            
+            if (createdBadgeId) {
+              badgeId = createdBadgeId;
+              isRealBadge = true;
+              console.log("Successfully created real NIP-58 badge with ID:", badgeId);
+            }
+          }
+        } catch (err) {
+          console.error("Error creating real badge, will use fallback:", err);
+        }
+      }
+      
+      // If real badge creation failed, use mock badge as fallback
+      if (!badgeId) {
+        // Generate a reliable mock badge ID that will always work
+        const timestamp = Math.floor(Date.now() / 1000);
+        const randomPart = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        badgeId = `mock_badge_${badgeDetails.name.replace(/\s+/g, '_')}_${timestamp}_${randomPart}`;
+        
+        console.log("Using reliable mock badge ID:", badgeId);
+      }
       
       // Update the credential with the badge ID
       await apiRequest('PATCH', `/api/credential-requests/${request.id}`, {
         status: 'approved',
-        badgeId: generatedBadgeId,
+        badgeId: badgeId,
         issueDate: new Date().toISOString()
       });
       
@@ -89,7 +122,9 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
       
       toast({
         title: "Credential approved",
-        description: "The credential has been approved and the badge has been issued",
+        description: isRealBadge 
+          ? "The credential has been approved and a real NIP-58 badge has been issued."
+          : "The credential has been approved and a badge has been issued (using fallback method).",
         variant: "default"
       });
       
