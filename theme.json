@@ -1,8 +1,8 @@
 {
   "variant": "vibrant",
-  "primary": "hsl(196, 84%, 45%)",
-  "secondary": "hsl(204, 15%, 95%)",
-  "accent": "hsl(175, 80%, 40%)",
+  "primary": "hsl(240, 75%, 58%)",
+  "secondary": "hsl(230, 25%, 98%)",
+  "accent": "hsl(212, 100%, 47%)",
   "appearance": "light",
-  "radius": 0.75
+  "radius": 1.25
 }
