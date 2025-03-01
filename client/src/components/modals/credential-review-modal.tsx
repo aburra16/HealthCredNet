@@ -73,6 +73,12 @@ export default function CredentialReviewModal({
     mutationFn: async (data: { status: string, badgeId?: string }) => {
       if (!user) throw new Error("User not authenticated");
       
+      console.log("Updating credential request with data:", {
+        status: data.status,
+        reviewedById: user.id,
+        badgeId: data.badgeId
+      });
+      
       const response = await apiRequest('PATCH', `/api/credential-requests/${request.id}`, {
         status: data.status,
         reviewedById: user.id,
@@ -111,14 +117,8 @@ export default function CredentialReviewModal({
   });
   
   const handleApprove = () => {
-    if (!badgeId) {
-      toast({
-        title: "Badge ID Required",
-        description: "Please enter a badge ID to approve this credential.",
-        variant: "destructive"
-      });
-      return;
-    }
+    // We don't require a badge ID anymore since we generate it automatically
+    // We keep the field for backward compatibility but it's optional
     
     setIsProcessing(true);
     
@@ -133,16 +133,44 @@ export default function CredentialReviewModal({
         thumbs: []
       };
       
-      // In a real app, this would create and return a real badge ID
-      // Here we just use the one entered by the user
-      const realBadgeId = createNIP58Badge(user.nostrPubkey, provider.nostrPubkey, badgeInfo);
-      console.log("Created badge with ID:", realBadgeId);
-      
-      // Process the request
-      reviewRequestMutation.mutate({
-        status: 'approved',
-        badgeId
-      });
+      // Create a real NIP-58 badge
+      try {
+        // Get the private key from local storage (if using direct login)
+        // or use empty string for NIP-07 extension
+        const privateKey = localStorage.getItem('medcred_privkey') || '';
+        
+        createNIP58Badge(privateKey, provider.nostrPubkey, badgeInfo)
+          .then(realBadgeId => {
+            if (realBadgeId) {
+              console.log("Created badge with ID:", realBadgeId);
+              
+              // Use the generated badge ID instead of the one entered by user
+              reviewRequestMutation.mutate({
+                status: 'approved',
+                badgeId: realBadgeId
+              });
+            } else {
+              throw new Error("Failed to create badge - no badge ID returned");
+            }
+          })
+          .catch(error => {
+            console.error("Error creating NIP-58 badge:", error);
+            toast({
+              title: "Failed to Create Badge",
+              description: "There was an error creating the NIP-58 badge. Please try again.",
+              variant: "destructive"
+            });
+            setIsProcessing(false);
+          });
+      } catch (error) {
+        console.error("Error approving credential:", error);
+        toast({
+          title: "Approval Failed",
+          description: "There was an error approving the credential request.",
+          variant: "destructive"
+        });
+        setIsProcessing(false);
+      }
     }
   };
   
@@ -214,19 +242,19 @@ export default function CredentialReviewModal({
           {request.status === 'pending' && (
             <div className="mt-4">
               <label htmlFor="badge-id" className="block text-sm font-medium text-gray-700">
-                Badge ID for NIP-58
+                Custom Badge ID (Optional)
               </label>
               <div className="mt-1">
                 <Input
                   type="text"
                   id="badge-id"
-                  placeholder="Enter a unique badge identifier"
+                  placeholder="Auto-generated if not provided"
                   value={badgeId}
                   onChange={(e) => setBadgeId(e.target.value)}
                 />
               </div>
               <p className="mt-1 text-xs text-gray-500">
-                This will be used to create the NIP-58 badge credential
+                A NIP-58 badge credential will be created automatically
               </p>
             </div>
           )}
@@ -252,7 +280,7 @@ export default function CredentialReviewModal({
             </Button>
             <Button
               onClick={handleApprove}
-              disabled={isProcessing || !badgeId}
+              disabled={isProcessing}
               className="gap-1"
             >
               <CheckCircle className="h-4 w-4" />
