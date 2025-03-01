@@ -226,8 +226,9 @@ export default function Login() {
           <p className="mt-3 text-sm text-muted-foreground font-medium tracking-wide uppercase">Healthcare credential verification</p>
         </div>
         
-        <div className="visualens-gradient-card mt-8 space-y-8">
-          <Tabs 
+        <div className="visualens-gradient-card mt-8">
+          <div className="space-y-8">
+            <Tabs 
             value={loginType} 
             onValueChange={(value) => setLoginType(value as UserRole)}
             className="w-full"
@@ -437,6 +438,7 @@ export default function Login() {
                 What is an npub/nsec key?
               </a>
             </div>
+          </div>
           </div>
         </div>
       </div>

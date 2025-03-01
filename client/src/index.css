@@ -125,20 +125,36 @@
     @apply opacity-100;
   }
 
-  /* Card with dynamic gradient effect */
+  /* Card with dynamic gradient border */
   .visualens-gradient-card {
-    @apply rounded-[20px] p-1 relative overflow-hidden;
-    background: linear-gradient(135deg, hsl(240, 75%, 58%), hsl(212, 100%, 47%));
+    @apply relative p-0 rounded-none border-0 bg-transparent shadow-none;
   }
   
-  /* Inner content area with white background contained within the border */
-  .visualens-gradient-card > * {
-    @apply relative p-6 bg-white rounded-[16px];
-    background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.95) 100%);
-    backdrop-filter: blur(8px);
+  /* Outer wrapper to manage the overall card dimensions */
+  .visualens-gradient-card > div {
+    @apply relative bg-white rounded-[20px] overflow-hidden py-6 px-6 shadow-xl;
     box-shadow: 
-      0 15px 25px -3px rgba(0, 0, 0, 0.07),
-      0 8px 12px -2px rgba(0, 0, 0, 0.03);
+      0 15px 25px -5px rgba(0, 0, 0, 0.1),
+      0 8px 12px -3px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Gradient border that doesn't leak outside */
+  .visualens-gradient-card > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    border: 3px solid transparent;
+    background: linear-gradient(135deg, hsl(240, 75%, 58%), hsl(212, 100%, 47%)) border-box;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    pointer-events: none;
   }
 
   /* Modern geometric accent element */
