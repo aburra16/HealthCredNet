@@ -48,6 +48,7 @@ export interface CredentialRequest {
   providerName: string;
   providerSpecialty: string;
   providerImageUrl?: string;
+  providerPublicKey?: string;  // Provider's Nostr public key (npub)
   credentialType: string;
   issuingAuthority: string;
   requestDate: string;
