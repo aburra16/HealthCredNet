@@ -31,6 +31,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: false,
   login: async () => {},
+  loginWithNip07: async () => {},
   logout: () => {},
   isAuthenticated: false
 });
@@ -136,6 +137,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Login using NIP-07 browser extension
+  const loginWithNip07 = async (role: string) => {
+    setLoading(true);
+    
+    try {
+      // Check for extension first
+      if (!hasNip07Extension()) {
+        toast({
+          title: "No Extension Found",
+          description: "Please install a Nostr browser extension like nos2x or Alby",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+      
+      // Ensure relay connection
+      await connectToRelays?.();
+      
+      // Get public key from the extension
+      const publicKey = await getNip07PublicKey();
+      if (!publicKey) {
+        toast({
+          title: "Could not get public key",
+          description: "Failed to get your public key from the extension",
+          variant: "destructive"
+        });
+        setLoading(false);
+        return;
+      }
+      
+      // Call the regular login function with empty private key (extension mode)
+      await login(publicKey, "", role);
+      
+    } catch (error) {
+      console.error('NIP-07 login failed:', error);
+      toast({
+        title: "Login Failed",
+        description: "There was an error logging in with your Nostr extension",
+        variant: "destructive"
+      });
+      setLoading(false);
+    }
+  };
+  
   const logout = () => {
     localStorage.removeItem('medcred_user');
     localStorage.removeItem('medcred_privkey');
@@ -150,7 +196,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithNip07, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

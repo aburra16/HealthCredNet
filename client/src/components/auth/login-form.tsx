@@ -30,7 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function LoginForm() {
-  const { login, loading } = useAuth();
+  const { login, loginWithNip07, loading } = useAuth();
   const { toast } = useToast();
   const [role, setRole] = useState("user");
   const [nostrPrivkey, setNostrPrivkey] = useState("");
@@ -111,7 +111,7 @@ export default function LoginForm() {
       
       // Use the loginWithNip07 function from auth.ts which handles all the details
       // including connecting to relays and using the extension for signing
-      await login.loginWithNip07(role);
+      await loginWithNip07(role);
       
     } catch (error) {
       console.error("Extension login failed:", error);
