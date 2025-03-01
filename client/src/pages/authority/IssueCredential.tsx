@@ -35,7 +35,7 @@ export default function IssueCredential() {
   // Fetch providers
   const { data: providers, isLoading: isLoadingProviders } = useQuery({
     queryKey: ['/api/providers'],
-    select: (data) => data.map((p: any) => ({
+    select: (data: any) => data.map((p: any) => ({
       id: p.id,
       name: `Dr. ${p.firstName} ${p.lastName}`,
       specialty: p.specialty
@@ -52,7 +52,7 @@ export default function IssueCredential() {
       if (!res.ok) throw new Error('Failed to fetch requests');
       return res.json();
     },
-    select: (data) => {
+    select: (data: any) => {
       return data.map((request: any) => ({
         id: request.id,
         providerId: request.provider.id,
@@ -260,7 +260,7 @@ export default function IssueCredential() {
             <div className="p-4 text-center text-gray-500">No credential requests found</div>
           ) : (
             <ul className="divide-y divide-gray-200">
-              {requests?.map((request) => (
+              {requests?.map((request: any) => (
                 <li key={request.id} className="px-4 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">

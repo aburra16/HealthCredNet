@@ -11,7 +11,7 @@ export default function AuthorityDashboard() {
   // Fetch credential requests
   const { data: requests, isLoading } = useQuery({
     queryKey: ['/api/credential-requests'],
-    select: (data) => {
+    select: (data: any) => {
       return data.map((request: any) => ({
         id: request.id,
         providerId: request.providerId,
@@ -28,7 +28,7 @@ export default function AuthorityDashboard() {
     }
   });
   
-  const pendingRequests = requests?.filter(req => req.status === 'pending') || [];
+  const pendingRequests = requests?.filter((req: any) => req.status === 'pending') || [];
   
   const openReviewModal = (request: CredentialRequest) => {
     setSelectedRequest(request);
@@ -170,7 +170,7 @@ export default function AuthorityDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {requests?.map((request) => (
+                {requests?.map((request: any) => (
                   <tr key={request.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                       <div className="flex items-center">
@@ -201,9 +201,9 @@ export default function AuthorityDashboard() {
                       })}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      <span className={`badge ${
-                        request.status === 'approved' ? 'badge-success' :
-                        request.status === 'pending' ? 'badge-warning' :
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        request.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
                       }`}>
                         {request.status === 'approved' ? 'Approved' :
