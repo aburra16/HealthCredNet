@@ -30,16 +30,15 @@ export default function Dashboard() {
       case 'user':
         return <SearchProviders />;
       case 'provider':
-        // Default route should show provider profile
-        if (location === '/dashboard') {
-          return <ProviderProfile />;
+        // Provider navigation
+        if (location === '/dashboard/credentials') {
+          console.log("Rendering provider credentials page");
+          return <ProviderCredentials />;
         }
-        return (
-          <Switch>
-            <Route path="/dashboard/credentials" component={ProviderCredentials} />
-            <Route component={ProviderProfile} />
-          </Switch>
-        );
+        
+        // Default - show provider profile
+        console.log("Rendering provider profile page");
+        return <ProviderProfile />;
       case 'authority':
         // Default route should show authority dashboard
         if (location === '/dashboard') {

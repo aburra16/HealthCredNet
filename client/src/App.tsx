@@ -16,6 +16,7 @@ function App() {
         <Route path="/" component={Home} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/dashboard/profile" component={UserProfile} />
+        <Route path="/dashboard/credentials" component={Dashboard} />
         <Route path="/provider/:id" component={ProviderProfile} />
         
         {/* Authority Routes */}
