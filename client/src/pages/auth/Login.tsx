@@ -188,6 +188,7 @@ export default function Login() {
       {/* Visual accent elements */}
       <div className="visualens-accent visualens-accent-1 text-primary absolute"></div>
       <div className="visualens-accent visualens-accent-2 text-primary/80 absolute"></div>
+      <div className="visualens-accent visualens-accent-3 text-primary absolute"></div>
       
       {/* Decorative geometric elements */}
       <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-primary/5 to-background"></div>
@@ -281,7 +282,7 @@ export default function Login() {
                 </div>
                 <div className="ml-3">
                   <h3 className="text-sm font-semibold text-foreground">{roleInfo.authority.title}</h3>
-                  <p className="text-xs mt-1 text-muted-foreground">{roleInfo.provider.description}</p>
+                  <p className="text-xs mt-1 text-muted-foreground">{roleInfo.authority.description}</p>
                 </div>
               </div>
             </TabsContent>
@@ -406,10 +407,10 @@ export default function Login() {
             <div className="mt-6 text-center">
               <a
                 href="#"
-                className="text-sm text-blue-600 hover:text-blue-500 flex items-center justify-center"
+                className="text-sm text-primary hover:text-primary/80 flex items-center justify-center transition-colors"
                 onClick={showNPUBInfo}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="16" x2="12" y2="12"></line>
                   <line x1="12" y1="8" x2="12.01" y2="8"></line>
