@@ -66,17 +66,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!validateNostrKey(nostrPubkey) || !validateNostrKey(nostrPrivkey)) {
         toast({
           title: "Invalid Nostr Keys",
-          description: "Please provide valid npub and nsec keys",
+          description: "Please provide valid Nostr keys",
           variant: "destructive"
         });
         setLoading(false);
         return;
       }
       
-      // In a real app, we would verify the private key matches the public key
-      // Here we just assume they match for simplicity
-      
-      // Send the authentication request
+      // Send the authentication request with the public key
       const response = await apiRequest('POST', '/api/auth/login', {
         nostrPubkey,
         role

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, AlertTriangleIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -20,17 +20,59 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { validateNostrKey, getPublicKeyFromPrivate } from "@/lib/nostr";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginForm() {
   const { login, loading } = useAuth();
+  const { toast } = useToast();
   const [role, setRole] = useState("user");
-  const [nostrPubkey, setNostrPubkey] = useState("");
   const [nostrPrivkey, setNostrPrivkey] = useState("");
+  const [derivedPublicKey, setDerivedPublicKey] = useState<string | null>(null);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [infoDialogOpen, setInfoDialogOpen] = useState(false);
   
+  // Derive public key when private key changes
+  useEffect(() => {
+    if (nostrPrivkey && nostrPrivkey.startsWith('nsec1')) {
+      const pubkey = getPublicKeyFromPrivate(nostrPrivkey);
+      setDerivedPublicKey(pubkey);
+    } else {
+      setDerivedPublicKey(null);
+    }
+  }, [nostrPrivkey]);
+  
   const handleLogin = async () => {
-    await login(nostrPubkey, nostrPrivkey, role);
+    if (!nostrPrivkey || !nostrPrivkey.startsWith('nsec1')) {
+      toast({
+        title: "Invalid key",
+        description: "Please enter a valid Nostr private key (nsec1...)",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!validateNostrKey(nostrPrivkey)) {
+      toast({
+        title: "Invalid key format",
+        description: "Your private key doesn't seem to be in the correct format",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const pubkey = getPublicKeyFromPrivate(nostrPrivkey);
+    if (!pubkey) {
+      toast({
+        title: "Could not derive public key",
+        description: "Unable to derive a public key from your private key",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Login with the derived public key
+    await login(pubkey, nostrPrivkey, role);
   };
   
   return (
@@ -64,18 +106,6 @@ export default function LoginForm() {
               </div>
               
               <div>
-                <Label htmlFor="nostr-key">Nostr Public Key (npub)</Label>
-                <Input 
-                  type="text" 
-                  id="nostr-key" 
-                  placeholder="npub1..." 
-                  value={nostrPubkey}
-                  onChange={(e) => setNostrPubkey(e.target.value)}
-                  className="mt-1"
-                />
-              </div>
-              
-              <div>
                 <Label htmlFor="nostr-private-key">Nostr Private Key (nsec)</Label>
                 <div className="mt-1 relative">
                   <Input 
@@ -102,12 +132,29 @@ export default function LoginForm() {
                 </div>
                 <p className="mt-1 text-xs text-gray-500">Your keys are never stored on our servers</p>
               </div>
+              
+              {derivedPublicKey && (
+                <div className="bg-green-50 p-3 rounded-md border border-green-200">
+                  <p className="text-xs font-medium text-green-800">
+                    Public key derived: {derivedPublicKey.substring(0, 10)}...{derivedPublicKey.substring(derivedPublicKey.length - 5)}
+                  </p>
+                </div>
+              )}
+              
+              {nostrPrivkey && !nostrPrivkey.startsWith('nsec1') && (
+                <div className="bg-amber-50 p-3 rounded-md border border-amber-200 flex">
+                  <AlertTriangleIcon className="h-4 w-4 text-amber-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-amber-800">
+                    Your private key should start with "nsec1"
+                  </p>
+                </div>
+              )}
             </div>
 
             <Button 
               className="w-full" 
               onClick={handleLogin}
-              disabled={loading}
+              disabled={loading || !derivedPublicKey}
             >
               {loading ? "Signing in..." : "Sign in"}
             </Button>
@@ -116,7 +163,7 @@ export default function LoginForm() {
               <Dialog open={infoDialogOpen} onOpenChange={setInfoDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="link" className="text-primary-600 hover:text-primary-500 text-sm">
-                    What is an npub/nsec key?
+                    What is an nsec key?
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -128,14 +175,14 @@ export default function LoginForm() {
                           <strong>Nostr</strong> (Notes and Other Stuff Transmitted by Relays) is a protocol for a censorship-resistant social network.
                         </p>
                         <p>
-                          <strong>npub</strong> is your public key, which serves as your identity. It's safe to share with others.
-                        </p>
-                        <p>
                           <strong>nsec</strong> is your private key, which you use to sign messages and prove ownership of your identity. 
                           <strong> Never share this with anyone!</strong>
                         </p>
                         <p>
-                          For testing MedCred, you can use any values that start with "npub1" and "nsec1" followed by random characters.
+                          We automatically derive your public key (npub) from your private key (nsec), so you only need to enter your private key.
+                        </p>
+                        <p>
+                          For testing MedCred, you can use any value that starts with "nsec1" followed by random characters.
                         </p>
                       </div>
                     </DialogDescription>

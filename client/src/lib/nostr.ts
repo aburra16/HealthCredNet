@@ -1,35 +1,63 @@
 /**
- * This is a simplified mock implementation of Nostr functionality for the first iteration
- * In a real application, we would integrate with actual Nostr libraries like nostr-tools
+ * Nostr functionality implementation using nostr-tools
  */
+import * as nostrTools from 'nostr-tools';
 
-// Mock Nostr key generation
+// Generate a new Nostr key pair
 export function generateKeyPair() {
-  // In a real implementation, this would use proper cryptography
-  // For now, we just generate mock keys
-  const privateKey = `nsec1${Array.from({ length: 40 }, () => 
-    "0123456789abcdef"[Math.floor(Math.random() * 16)]).join('')}`;
+  // Use nostr-tools to generate a proper Nostr key pair
+  const privateKeyHex = nostrTools.generatePrivateKey();
+  const publicKeyHex = nostrTools.getPublicKey(privateKeyHex);
   
-  const publicKey = `npub1${Array.from({ length: 40 }, () => 
-    "0123456789abcdef"[Math.floor(Math.random() * 16)]).join('')}`;
+  // Convert hex keys to bech32 format
+  const privateKey = nostrTools.nip19.nsecEncode(privateKeyHex);
+  const publicKey = nostrTools.nip19.npubEncode(publicKeyHex);
     
   return { privateKey, publicKey };
 }
 
-// Mock key validation function
+// Validate a Nostr key
 export function validateNostrKey(key: string): boolean {
   if (!key) return false;
   
-  // Very basic validation - check for npub or nsec prefix
-  if (key.startsWith('npub1') && key.length >= 45) {
-    return true;
+  try {
+    // Validate npub
+    if (key.startsWith('npub1')) {
+      const decoded = nostrTools.nip19.decode(key);
+      return decoded.type === 'npub' && typeof decoded.data === 'string';
+    }
+    
+    // Validate nsec
+    if (key.startsWith('nsec1')) {
+      const decoded = nostrTools.nip19.decode(key);
+      return decoded.type === 'nsec' && typeof decoded.data === 'string';
+    }
+    
+    return false;
+  } catch (error) {
+    return false;
   }
-  
-  if (key.startsWith('nsec1') && key.length >= 45) {
-    return true;
+}
+
+// Extract public key from private key
+export function getPublicKeyFromPrivate(nsecKey: string): string | null {
+  try {
+    if (!nsecKey.startsWith('nsec1')) return null;
+    
+    // Decode the nsec key
+    const decoded = nostrTools.nip19.decode(nsecKey);
+    if (decoded.type !== 'nsec' || typeof decoded.data !== 'string') return null;
+    
+    // Get the public key hex from the private key hex
+    const privateKeyHex = decoded.data;
+    const publicKeyHex = nostrTools.getPublicKey(privateKeyHex);
+    
+    // Encode it back to npub format
+    return nostrTools.nip19.npubEncode(publicKeyHex);
+  } catch (error) {
+    console.error('Failed to extract public key:', error);
+    return null;
   }
-  
-  return false;
 }
 
 // Mock function to create NIP-58 badge
