@@ -35,8 +35,14 @@ export default function LoginForm() {
   // Derive public key when private key changes
   useEffect(() => {
     if (nostrPrivkey && nostrPrivkey.startsWith('nsec1')) {
-      const pubkey = getPublicKeyFromPrivate(nostrPrivkey);
-      setDerivedPublicKey(pubkey);
+      try {
+        const pubkey = getPublicKeyFromPrivate(nostrPrivkey);
+        setDerivedPublicKey(pubkey);
+        console.log("Public key derived:", pubkey);
+      } catch (error) {
+        console.error("Failed to derive public key:", error);
+        setDerivedPublicKey(null);
+      }
     } else {
       setDerivedPublicKey(null);
     }
@@ -154,7 +160,7 @@ export default function LoginForm() {
             <Button 
               className="w-full" 
               onClick={handleLogin}
-              disabled={loading || !derivedPublicKey}
+              disabled={loading || !(nostrPrivkey && nostrPrivkey.startsWith('nsec1'))}
             >
               {loading ? "Signing in..." : "Sign in"}
             </Button>

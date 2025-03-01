@@ -62,20 +62,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     
     try {
-      // Validate the keys
-      if (!validateNostrKey(nostrPubkey) || !validateNostrKey(nostrPrivkey)) {
+      // Validate the private key
+      if (!validateNostrKey(nostrPrivkey)) {
         toast({
-          title: "Invalid Nostr Keys",
-          description: "Please provide valid Nostr keys",
+          title: "Invalid Nostr Key",
+          description: "Please provide a valid Nostr private key (nsec1...)",
           variant: "destructive"
         });
         setLoading(false);
         return;
       }
       
+      // We already derived the public key in the login form, just use it here
       // Send the authentication request with the public key
       const response = await apiRequest('POST', '/api/auth/login', {
-        nostrPubkey,
+        nostrPubkey, // This is the npub derived from nsec
         role
       });
       
