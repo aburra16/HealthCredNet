@@ -58,10 +58,11 @@ export default function IssueCredential() {
         providerId: request.provider.id,
         providerName: `Dr. ${request.provider.firstName} ${request.provider.lastName}`,
         providerSpecialty: request.provider.specialty,
-        providerImageUrl: request.provider.profileImageUrl || request.provider.user.profileImageUrl,
+        providerImageUrl: request.provider.profileImageUrl,
+        providerPublicKey: request.provider.nostrPubkey,
         credentialType: request.type,
         issuingAuthority: request.issuingAuthority,
-        requestDate: request.requestDate,
+        requestDate: request.createdAt || request.requestDate,
         status: request.status,
         details: request.details
       }));

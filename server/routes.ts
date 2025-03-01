@@ -8,7 +8,8 @@ import {
   insertCredentialRequestSchema, 
   insertAuditLogSchema,
   SPECIALTIES,
-  CREDENTIAL_TYPES
+  CREDENTIAL_TYPES,
+  type CredentialRequest
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -164,16 +165,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
   router.get('/credential-requests', async (req: Request, res: Response) => {
     try {
       const providerId = req.query.providerId ? parseInt(req.query.providerId as string) : undefined;
+      const status = req.query.status as string | undefined;
       
+      // Get base requests
+      let requests: CredentialRequest[];
       if (providerId) {
-        const requests = await storage.getCredentialRequestsByProvider(providerId);
-        return res.json(requests);
+        requests = await storage.getCredentialRequestsByProvider(providerId);
+      } else if (status) {
+        // Filter by status
+        requests = Array.from((await storage.getPendingCredentialRequests()))
+          .filter(req => status === 'all' || req.status === status);
+      } else {
+        // Return pending requests if no provider ID or status is specified
+        requests = await storage.getPendingCredentialRequests();
       }
       
-      // Return pending requests if no provider ID is specified
-      const pendingRequests = await storage.getPendingCredentialRequests();
-      res.json(pendingRequests);
+      // Enrich requests with provider information
+      const enrichedRequests = await Promise.all(
+        requests.map(async (request) => {
+          // Get provider information
+          const provider = await storage.getUser(request.providerId);
+          
+          if (!provider) {
+            return {
+              ...request,
+              provider: {
+                id: request.providerId,
+                firstName: "Unknown",
+                lastName: "Provider",
+                specialty: "",
+                nostrPubkey: ""
+              }
+            };
+          }
+          
+          // Split the display name into first and last name
+          const nameParts = provider.displayName.split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          
+          return {
+            ...request,
+            provider: {
+              id: provider.id,
+              firstName,
+              lastName,
+              specialty: provider.specialty || '',
+              nostrPubkey: provider.nostrPubkey,
+              profileImageUrl: provider.avatar
+            }
+          };
+        })
+      );
+      
+      res.json(enrichedRequests);
     } catch (error) {
+      console.error('Error fetching credential requests:', error);
       res.status(500).json({ error: 'Failed to fetch credential requests' });
     }
   });
