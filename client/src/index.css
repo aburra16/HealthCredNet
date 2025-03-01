@@ -127,31 +127,13 @@
 
   /* Card with dynamic gradient effect */
   .visualens-gradient-card {
-    @apply rounded-[20px] p-0 relative overflow-hidden;
-    border: 1px solid rgba(236, 240, 255, 0.7);
-  }
-
-  /* Violet gradient border that wraps around the entire card */
-  .visualens-gradient-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    padding: 1px; /* Control border thickness */
-    border-radius: 20px;
+    @apply rounded-[20px] p-1 relative overflow-hidden;
     background: linear-gradient(135deg, hsl(240, 75%, 58%), hsl(212, 100%, 47%));
-    -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    z-index: 2;
-    opacity: 0.9;
-    pointer-events: none;
   }
   
-  /* Inner content area with white background that doesn't exceed the border */
+  /* Inner content area with white background contained within the border */
   .visualens-gradient-card > * {
-    @apply relative z-[1] p-6 bg-white rounded-[19px];
+    @apply relative p-6 bg-white rounded-[16px];
     background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.95) 100%);
     backdrop-filter: blur(8px);
     box-shadow: 
