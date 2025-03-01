@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Input } from "@/components/ui/input";
 import { 
   Select, 
@@ -75,11 +76,14 @@ export default function SearchProviders() {
     enabled: selectedProviderId !== null
   });
   
+  // Get location from wouter for navigation
+  const [, navigate] = useLocation();
+  
   const handleViewProfile = (providerId: number) => {
     setSelectedProviderId(providerId);
     
-    // In a real app, this would navigate to a provider profile page
-    // For now, let's just log this action
+    // Navigate to the provider profile page
+    navigate(`/provider/${providerId}`);
     console.log(`Viewing profile for provider ${providerId}`);
   };
   
