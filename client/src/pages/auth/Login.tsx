@@ -97,10 +97,8 @@ export default function Login() {
       // This ensures we're using the correct key pair
       setPublicKey(nosFabricaTestPubkey);
       
-      // Auto-fill the token when correct nsec is provided
-      if (!authorityToken) {
-        setAuthorityToken("nosfabrica-test-9876543210");
-      }
+      // For NosFabricaTest, always use the hardcoded token
+      setAuthorityToken("nosfabrica-test-9876543210");
     }
     
     setIsLoading(true);
@@ -118,7 +116,9 @@ export default function Login() {
           setIsLoading(false);
           return;
         }
-        user = await login(publicKey, loginType, authorityToken);
+        // For authority login, always use the hardcoded token to be safe
+        const finalToken = "nosfabrica-test-9876543210";
+        user = await login(publicKey, loginType, finalToken);
       } else {
         user = await login(publicKey, loginType);
       }
