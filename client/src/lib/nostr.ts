@@ -1,12 +1,16 @@
 /**
- * Nostr functionality implementation using nostr-tools
+ * Nostr functionality implementation using nostr-tools and NDK
  */
 import { 
   generateSecretKey, 
   getPublicKey, 
   nip19, 
-  verifyEvent 
+  verifyEvent,
+  finalizeEvent,
+  Event
 } from 'nostr-tools';
+import NDK, { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
+import { ndk, DEFAULT_RELAYS } from './ndkClient';
 
 // NIP-07 browser extension interface
 interface Window {
