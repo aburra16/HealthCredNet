@@ -30,9 +30,28 @@ export const clearAuth = (): void => {
 /**
  * Authenticate user with Nostr public key and role
  * If using a NIP-07 extension, it will automatically connect to relays
+ * 
+ * Authority role is restricted to NosFabricaTest account only
  */
 export const login = async (publicKey: string, role: UserRole): Promise<AuthUser> => {
   try {
+    // Double-check authority restriction
+    if (role === 'authority') {
+      // NosFabricaTest public key (derived from nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum)
+      const nosFabricaTestPubkey = 'npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu';
+      
+      console.log("Authority login attempt:", publicKey);
+      console.log("Required NosFabricaTest pubkey:", nosFabricaTestPubkey);
+      
+      // Verify it's NosFabricaTest
+      if (publicKey !== nosFabricaTestPubkey) {
+        console.error("Authority login denied - incorrect pubkey");
+        throw new Error('Authority role restricted to NosFabricaTest only');
+      }
+      
+      console.log("Authority credentials verified");
+    }
+  
     // Ensure relay connection
     await connectToRelays();
     
@@ -78,10 +97,17 @@ export const hasRole = (role: UserRole): boolean => {
 
 /**
  * Login with NIP-07 browser extension
+ * Authority login is blocked with extension for security
  */
 export const loginWithNip07 = async (role: UserRole): Promise<AuthUser> => {
   try {
-    // Check if extension is available (hasNip07Extension is a boolean constant)
+    // Authority role is not allowed with extension login
+    if (role === 'authority') {
+      console.error("Authority login attempted with extension");
+      throw new Error('Authority role requires manual login with NosFabricaTest credentials');
+    }
+    
+    // Check if extension is available
     if (!hasNip07Extension) {
       throw new Error('No NIP-07 browser extension detected');
     }
@@ -91,6 +117,8 @@ export const loginWithNip07 = async (role: UserRole): Promise<AuthUser> => {
     if (!npub) {
       throw new Error('Could not get public key from extension');
     }
+    
+    console.log("Extension login with pubkey:", npub);
     
     // Login with the public key
     return await login(npub, role);

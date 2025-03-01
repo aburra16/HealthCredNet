@@ -64,14 +64,31 @@ export default function Login() {
     if (loginType === 'authority') {
       const nosFabricaTestNsec = 'nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum';
       
-      if (privateKey !== nosFabricaTestNsec) {
+      // Strictly check private key for authority logins
+      if (!privateKey) {
+        console.error("Authority login attempt without nsec key");
         toast({
           title: "Authority login restricted",
-          description: "Only NosFabricaTest can log in as an authority",
+          description: "You must provide the NosFabricaTest private key to log in as an authority",
           variant: "destructive",
         });
         return;
       }
+      
+      console.log("Validating authority credentials...");
+      
+      // Do exact string comparison for authority restriction
+      if (privateKey !== nosFabricaTestNsec) {
+        console.error("Authority login attempt with incorrect nsec key");
+        toast({
+          title: "Authority login denied",
+          description: "Only the official NosFabricaTest account can log in as an authority. Your credentials don't match.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      console.log("NosFabricaTest credentials verified");
     }
     
     setIsLoading(true);
