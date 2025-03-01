@@ -1,17 +1,22 @@
 /**
  * Nostr functionality implementation using nostr-tools
  */
-import * as nostrTools from 'nostr-tools';
+import { 
+  generateSecretKey, 
+  getPublicKey, 
+  nip19, 
+  verifyEvent 
+} from 'nostr-tools';
 
 // Generate a new Nostr key pair
 export function generateKeyPair() {
   // Use nostr-tools to generate a proper Nostr key pair
-  const privateKeyHex = nostrTools.generatePrivateKey();
-  const publicKeyHex = nostrTools.getPublicKey(privateKeyHex);
+  const privateKeyHex = generateSecretKey();
+  const publicKeyHex = getPublicKey(privateKeyHex);
   
   // Convert hex keys to bech32 format
-  const privateKey = nostrTools.nip19.nsecEncode(privateKeyHex);
-  const publicKey = nostrTools.nip19.npubEncode(publicKeyHex);
+  const privateKey = nip19.nsecEncode(privateKeyHex);
+  const publicKey = nip19.npubEncode(publicKeyHex);
     
   return { privateKey, publicKey };
 }
@@ -23,13 +28,13 @@ export function validateNostrKey(key: string): boolean {
   try {
     // Validate npub
     if (key.startsWith('npub1')) {
-      const decoded = nostrTools.nip19.decode(key);
+      const decoded = nip19.decode(key);
       return decoded.type === 'npub' && typeof decoded.data === 'string';
     }
     
     // Validate nsec
     if (key.startsWith('nsec1')) {
-      const decoded = nostrTools.nip19.decode(key);
+      const decoded = nip19.decode(key);
       return decoded.type === 'nsec' && typeof decoded.data === 'string';
     }
     
@@ -45,15 +50,15 @@ export function getPublicKeyFromPrivate(nsecKey: string): string | null {
     if (!nsecKey.startsWith('nsec1')) return null;
     
     // Decode the nsec key
-    const decoded = nostrTools.nip19.decode(nsecKey);
+    const decoded = nip19.decode(nsecKey);
     if (decoded.type !== 'nsec' || typeof decoded.data !== 'string') return null;
     
     // Get the public key hex from the private key hex
     const privateKeyHex = decoded.data;
-    const publicKeyHex = nostrTools.getPublicKey(privateKeyHex);
+    const publicKeyHex = getPublicKey(privateKeyHex);
     
     // Encode it back to npub format
-    return nostrTools.nip19.npubEncode(publicKeyHex);
+    return nip19.npubEncode(publicKeyHex);
   } catch (error) {
     console.error('Failed to extract public key:', error);
     return null;
