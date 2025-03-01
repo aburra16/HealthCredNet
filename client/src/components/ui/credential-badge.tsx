@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { verifyNIP58Badge } from "@/lib/nostr";
-import { CheckCircle, Clock, XCircle, BadgeCheck, Shield, Award } from "lucide-react";
+import { CheckCircle, Clock, XCircle, Shield, Award, Medal, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CredentialBadgeProps {
@@ -24,11 +24,11 @@ export default function CredentialBadge({
   const getStatusIcon = () => {
     switch (status) {
       case 'approved':
-        return <CheckCircle className="h-3.5 w-3.5 mr-1.5" />;
+        return <CheckCircle className="h-3.5 w-3.5 mr-1.5 stroke-[2.5px]" />;
       case 'pending':
-        return <Clock className="h-3.5 w-3.5 mr-1.5" />;
+        return <Clock className="h-3.5 w-3.5 mr-1.5 stroke-[2.5px]" />;
       case 'rejected':
-        return <XCircle className="h-3.5 w-3.5 mr-1.5" />;
+        return <XCircle className="h-3.5 w-3.5 mr-1.5 stroke-[2.5px]" />;
       default:
         return null;
     }
@@ -49,30 +49,50 @@ export default function CredentialBadge({
   
   return (
     <div className={cn(
-      "visualens-card p-4 border border-gray-100 hover:shadow-md transition-all duration-300",
+      "visualens-gradient-card group",
       className
     )}>
-      <div className="flex items-start">
-        <div className="flex-shrink-0 bg-primary/10 p-2 rounded-lg">
-          <Award className="h-6 w-6 text-primary" />
+      <div className="absolute inset-0 visualens-accent text-primary opacity-5"></div>
+      
+      <div className="flex items-start relative z-10">
+        <div className="flex-shrink-0 bg-primary/10 p-3 rounded-xl shadow-sm relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <Medal className="h-7 w-7 text-primary relative z-10" />
         </div>
+        
         <div className="ml-4 flex-1">
-          <h4 className="text-sm font-semibold text-foreground">{type}</h4>
-          <p className="text-xs text-muted-foreground mt-1">Issued by: {issuingAuthority}</p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h4 className="text-base font-semibold text-foreground">{type}</h4>
+              <p className="text-xs text-muted-foreground mt-1 font-medium">
+                Issued by <span className="text-primary font-semibold">{issuingAuthority}</span>
+              </p>
+            </div>
+            
+            {isVerified && (
+              <div className="bg-primary/10 rounded-full p-1.5 shadow-sm">
+                <Sparkles className="h-4 w-4 text-primary" />
+              </div>
+            )}
+          </div>
+          
           {badgeId && (
-            <p className="text-xs text-muted-foreground/70 mt-0.5 font-mono">
-              {badgeId.slice(0, 8)}...{badgeId.slice(-8)}
-            </p>
+            <div className="mt-3 py-1 px-3 bg-primary/5 rounded-lg inline-block">
+              <p className="text-[10px] text-primary/70 font-mono tracking-wide">
+                {badgeId.slice(0, 8)}...{badgeId.slice(-8)}
+              </p>
+            </div>
           )}
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Badge variant="outline" className={cn("rounded-md py-1 px-2.5 font-medium text-xs", getStatusColor())}>
+          
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Badge variant="outline" className={cn("rounded-full py-1 px-3 text-xs font-semibold", getStatusColor())}>
               {getStatusIcon()}
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </Badge>
             
             {isVerified && (
-              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 rounded-md py-1 px-2.5 font-medium text-xs">
-                <Shield className="h-3.5 w-3.5 mr-1.5" />
+              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 rounded-full py-1 px-3 text-xs font-semibold">
+                <Shield className="h-3.5 w-3.5 mr-1.5 stroke-[2.5px]" />
                 Verified on Nostr
               </Badge>
             )}

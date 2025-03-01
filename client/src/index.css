@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,29 +9,57 @@
     @apply border-border;
   }
 
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground selection:bg-primary/20 selection:text-primary;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium tracking-tight text-primary;
+    @apply font-medium tracking-tight text-foreground;
   }
   
   h1 {
-    @apply text-3xl md:text-4xl font-bold;
+    @apply text-4xl md:text-5xl font-bold tracking-tighter text-primary;
   }
   
   h2 {
-    @apply text-2xl md:text-3xl;
+    @apply text-3xl md:text-4xl font-semibold tracking-tight;
   }
   
   h3 {
-    @apply text-xl md:text-2xl;
+    @apply text-2xl md:text-3xl font-medium;
   }
 
-  /* Visualens AI inspired spacing */
+  h4 {
+    @apply text-xl font-medium;
+  }
+
+  p {
+    @apply leading-relaxed text-muted-foreground;
+  }
+
+  /* Visualens AI inspired spacing and containers */
   .container {
     @apply max-w-7xl mx-auto px-4 md:px-6 py-8;
+  }
+
+  /* Distinctive accent bar at page top */
+  .visualens-accent-top {
+    position: relative;
+  }
+
+  .visualens-accent-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, hsl(240, 75%, 58%) 0%, hsl(212, 100%, 47%) 100%);
+    z-index: 100;
   }
 }
 
@@ -70,31 +100,90 @@
     @apply bg-amber-50 text-amber-700;
   }
   
-  /* Card styling */
+  /* Modern Card Styling - Visualens Inspired */
   .card {
-    @apply bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100;
+    @apply bg-white rounded-[20px] shadow-[0_4px_25px_rgba(0,0,0,0.05)] transition-all duration-300 overflow-hidden relative border-0;
   }
   
-  /* Form element common styles */
+  /* Advanced layered card with subtle shadows */  
+  .visualens-card {
+    @apply relative bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.04)] transition-all duration-300;
+    background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+  }
+  
+  .visualens-card::before {
+    content: '';
+    @apply absolute left-0 top-[10%] h-[80%] w-[3px] bg-primary rounded-r-md opacity-0 transition-all duration-300;
+  }
+  
+  .visualens-card:hover {
+    @apply shadow-[0_15px_35px_rgba(0,0,0,0.08)];
+    transform: translateY(-2px);
+  }
+  
+  .visualens-card:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Card with dynamic gradient effect */
+  .visualens-gradient-card {
+    @apply bg-white rounded-[20px] p-6 relative overflow-hidden;
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.05),
+      0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  }
+
+  .visualens-gradient-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 6px;
+    background: linear-gradient(180deg, hsl(240, 75%, 58%), hsl(212, 100%, 47%));
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    opacity: 0.8;
+  }
+
+  /* Modern geometric accent element */
+  .visualens-accent {
+    @apply absolute -z-10 opacity-[0.035];
+    background-image: radial-gradient(circle at center, currentColor 0%, transparent 70%);
+  }
+
+  .visualens-accent-1 {
+    @apply w-[400px] h-[400px] right-[-100px] top-[-150px];
+  }
+
+  .visualens-accent-2 {
+    @apply w-[300px] h-[300px] left-[-50px] bottom-[-50px];
+  }
+  
+  /* Form element common styles - Visualens inspired */
   .form-input {
-    @apply block w-full border border-gray-200 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 ease-in-out;
+    @apply block w-full border-0 bg-gray-50/50 rounded-xl shadow-sm py-3.5 px-4 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-white transition-all duration-200 ease-in-out;
   }
   
   /* Modern table styling - Visualens inspired */
   .table-modern {
-    @apply min-w-full divide-y divide-gray-100;
+    @apply min-w-full divide-y divide-gray-100 overflow-hidden rounded-xl;
   }
   
   .table-modern thead {
-    @apply bg-gray-50/50;
+    @apply bg-primary/5 text-primary;
   }
   
   .table-modern th {
-    @apply px-6 py-4 text-left text-xs font-medium text-primary uppercase tracking-wider;
+    @apply px-6 py-4 text-left text-xs font-medium uppercase tracking-wider;
   }
   
   .table-modern tbody {
-    @apply bg-white divide-y divide-gray-50;
+    @apply bg-white;
+  }
+  
+  .table-modern tbody tr {
+    @apply hover:bg-gray-50/50 transition-colors duration-150;
   }
   
   .table-modern td {
@@ -103,25 +192,24 @@
   
   /* Layout classes */
   .page-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12;
   }
   
   .section {
-    @apply my-12;
-  }
-
-  /* Visualens AI inspired cards */
-  .visualens-card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 relative;
+    @apply my-16;
   }
   
-  .visualens-card::before {
-    content: '';
-    @apply absolute left-0 top-0 h-full w-1 bg-primary opacity-0 transition-all duration-300;
+  /* Advanced grid for modern asymmetric layouts */
+  .visualens-grid {
+    @apply grid grid-cols-1 md:grid-cols-12 gap-6;
   }
   
-  .visualens-card:hover::before {
-    @apply opacity-100;
+  .visualens-main {
+    @apply md:col-span-8;
+  }
+  
+  .visualens-sidebar {
+    @apply md:col-span-4;
   }
   
   /* Animation classes */
