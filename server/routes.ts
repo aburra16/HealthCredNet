@@ -88,13 +88,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Authentication route (mock for now)
+  // Authentication route with strict authority restriction
   router.post('/auth/login', async (req: Request, res: Response) => {
     try {
-      const { nostrPubkey, role } = req.body;
+      const { publicKey, role } = req.body;
+      
+      // Extract the Nostr public key from the request (sometimes it's sent as nostrPubkey)
+      const nostrPubkey = req.body.nostrPubkey || publicKey;
       
       if (!nostrPubkey) {
         return res.status(400).json({ error: 'Nostr public key is required' });
+      }
+      
+      // STRICT SERVER-SIDE AUTHORITY LOGIN RESTRICTION
+      if (role === 'authority') {
+        // NosFabricaTest public key
+        const nosFabricaTestPubkey = 'npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu';
+        
+        // Log the attempt
+        console.log(`Authority login attempt: ${nostrPubkey}`);
+        console.log(`Required pubkey: ${nosFabricaTestPubkey}`);
+        
+        // Compare with NosFabricaTest pubkey
+        if (nostrPubkey !== nosFabricaTestPubkey) {
+          console.error('Authority login denied - unauthorized pubkey');
+          return res.status(403).json({ error: 'Only NosFabricaTest account can log in as an authority' });
+        }
+        
+        console.log('Authority login allowed - valid NosFabricaTest credentials');
       }
       
       // Check if user exists
@@ -117,6 +138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(user);
     } catch (error) {
+      console.error('Authentication error:', error);
       res.status(500).json({ error: 'Authentication failed' });
     }
   });
