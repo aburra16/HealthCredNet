@@ -177,7 +177,11 @@ export async function createNIP58Badge(
       }
       
       // Get the issuer's public key
-      const issuerHexPubkey = getPublicKey(privateKeyHex);
+      // Convert hex string to Uint8Array for nostr-tools compatibility
+      const privateKeyBytes = Uint8Array.from(
+        Buffer.from(privateKeyHex, 'hex')
+      );
+      const issuerHexPubkey = getPublicKey(privateKeyBytes);
       
       // Update the event with the issuer's pubkey
       unsignedEvent.pubkey = issuerHexPubkey;
