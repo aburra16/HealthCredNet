@@ -7,35 +7,29 @@ import {
   nip19, 
   verifyEvent,
   finalizeEvent,
-  Event
+  type Event as NostrEvent
 } from 'nostr-tools';
 import NDK, { NDKEvent, NDKFilter } from '@nostr-dev-kit/ndk';
 import { ndk, DEFAULT_RELAYS } from './ndkClient';
 
 // NIP-07 browser extension interface
-interface Window {
-  nostr?: {
-    getPublicKey(): Promise<string>;
-    signEvent(event: any): Promise<any>;
-    getRelays(): Promise<{ [url: string]: { read: boolean; write: boolean } }>;
-    nip04: {
-      encrypt(pubkey: string, plaintext: string): Promise<string>;
-      decrypt(pubkey: string, ciphertext: string): Promise<string>;
-    };
+interface Nip07Interface {
+  getPublicKey(): Promise<string>;
+  signEvent(event: NostrEvent): Promise<{ sig: string }>;
+  getRelays?(): Promise<{ [url: string]: { read: boolean; write: boolean } }>;
+  nip04?: {
+    encrypt(pubkey: string, plaintext: string): Promise<string>;
+    decrypt(pubkey: string, ciphertext: string): Promise<string>;
+  };
+  nip44?: {
+    encrypt(pubkey: string, plaintext: string): Promise<string>;
+    decrypt(pubkey: string, ciphertext: string): Promise<string>;
   };
 }
 
 declare global {
   interface Window {
-    nostr?: {
-      getPublicKey(): Promise<string>;
-      signEvent(event: any): Promise<any>;
-      getRelays(): Promise<{ [url: string]: { read: boolean; write: boolean } }>;
-      nip04: {
-        encrypt(pubkey: string, plaintext: string): Promise<string>;
-        decrypt(pubkey: string, ciphertext: string): Promise<string>;
-      };
-    };
+    nostr?: Nip07Interface;
   }
 }
 
@@ -330,8 +324,8 @@ export async function verifyNIP58Badge(
       // Verify the event signature is valid
       const rawEvent = event.rawEvent();
       // Ensure event has all required properties before verification
-      if (rawEvent && rawEvent.kind && rawEvent.pubkey && rawEvent.sig) {
-        const isValid = verifyEvent(rawEvent);
+      if (rawEvent && rawEvent.kind !== undefined && rawEvent.pubkey && rawEvent.sig) {
+        const isValid = verifyEvent(rawEvent as NostrEvent);
         if (!isValid) {
           console.error('Badge signature verification failed');
           return false;
