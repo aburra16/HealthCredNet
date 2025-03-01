@@ -22,29 +22,31 @@ export default function Header() {
   if (!user) return null;
   
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <svg className="h-8 w-auto text-primary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-              </svg>
+              <div className="bg-primary-600 text-white p-2 rounded-md">
+                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                </svg>
+              </div>
               <span className="ml-2 text-xl font-bold text-primary-600">MedCred</span>
             </div>
-            <nav className="ml-6 flex space-x-8" role="navigation">
+            <nav className="ml-8 flex space-x-8" role="navigation">
               {/* User navigation */}
               {user.role === 'user' && (
-                <div className="flex space-x-4">
+                <div className="flex space-x-6">
                   <Link href="/dashboard" 
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    className={`inline-flex items-center px-3 h-16 border-b-2 text-sm font-medium transition-colors duration-150 ${
+                      location === '/dashboard' ? 'border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-primary-300'
                     }`}>
                     Find Providers
                   </Link>
                   <Link href="/dashboard/profile" 
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/dashboard/profile' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    className={`inline-flex items-center px-3 h-16 border-b-2 text-sm font-medium transition-colors duration-150 ${
+                      location === '/dashboard/profile' ? 'border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-primary-300'
                     }`}>
                     My Profile
                   </Link>
@@ -53,16 +55,16 @@ export default function Header() {
               
               {/* Provider navigation */}
               {user.role === 'provider' && (
-                <div className="flex space-x-4">
+                <div className="flex space-x-6">
                   <Link href="/dashboard"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    className={`inline-flex items-center px-3 h-16 border-b-2 text-sm font-medium transition-colors duration-150 ${
+                      location === '/dashboard' ? 'border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-primary-300'
                     }`}>
                       My Profile
                   </Link>
                   <Link href="/dashboard/credentials"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/dashboard/credentials' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    className={`inline-flex items-center px-3 h-16 border-b-2 text-sm font-medium transition-colors duration-150 ${
+                      location === '/dashboard/credentials' ? 'border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-primary-300'
                     }`}>
                       Credentials
                   </Link>
@@ -71,22 +73,22 @@ export default function Header() {
               
               {/* Authority navigation */}
               {user.role === 'authority' && (
-                <div className="flex space-x-4">
+                <div className="flex space-x-6">
                   <Link href="/authority/dashboard"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/authority/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    className={`inline-flex items-center px-3 h-16 border-b-2 text-sm font-medium transition-colors duration-150 ${
+                      location === '/authority/dashboard' ? 'border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-primary-300'
                     }`}>
                       Dashboard
                   </Link>
                   <Link href="/authority/issue"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/authority/issue' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    className={`inline-flex items-center px-3 h-16 border-b-2 text-sm font-medium transition-colors duration-150 ${
+                      location === '/authority/issue' ? 'border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-primary-300'
                     }`}>
                       Issue Credentials
                   </Link>
                   <Link href="/authority/audit-logs"
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      location === '/authority/audit-logs' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    className={`inline-flex items-center px-3 h-16 border-b-2 text-sm font-medium transition-colors duration-150 ${
+                      location === '/authority/audit-logs' ? 'border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-primary-300'
                     }`}>
                       Audit Logs
                   </Link>
@@ -96,21 +98,24 @@ export default function Header() {
           </div>
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Badge variant="secondary" className="capitalize">
+              <Badge variant="outline" className="capitalize bg-gray-50 border-gray-200 text-primary-700 font-medium">
                 {user.role}
               </Badge>
             </div>
             <div className="ml-4 flex items-center md:ml-6">
               <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <UserCircle className="h-6 w-6" />
+                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-100">
+                    <UserCircle className="h-6 w-6 text-gray-700" />
                     <span className="sr-only">Open user menu</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>
-                    {user.displayName}
+                <DropdownMenuContent align="end" className="w-56 mt-2">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{user.role}</p>
+                    </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
@@ -120,7 +125,7 @@ export default function Header() {
                         <span>Profile</span>
                       </DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem onClick={logout}>
+                    <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600">
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </DropdownMenuItem>
