@@ -173,7 +173,7 @@ export async function createNIP58Badge(
         if (decoded.type !== 'nsec') {
           throw new Error('Invalid nsec key');
         }
-        privateKeyHex = decoded.data as string;
+        privateKeyHex = Buffer.from(decoded.data as Uint8Array).toString('hex');
       }
       
       // Get the issuer's public key

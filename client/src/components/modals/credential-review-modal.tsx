@@ -127,9 +127,10 @@ export default function CredentialReviewModal({
     if (provider && user) {
       // This is just a mock of what would happen in a real implementation
       const badgeInfo = {
-        credentialType: request.type,
-        issuingAuthority: request.issuingAuthority,
-        issueDate: new Date()
+        name: `${request.type} Certification`,
+        description: `${request.type} credential issued by ${request.issuingAuthority}`,
+        image: "",
+        thumbs: []
       };
       
       // In a real app, this would create and return a real badge ID
