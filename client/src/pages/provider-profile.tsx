@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle, MapPin, Building, Award, ChevronsLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import CredentialBadge from "@/components/ui/credential-badge";
+import CredentialStatusBadge from "@/components/ui/credential-status-badge";
 
 interface Provider {
   id: number;
@@ -219,11 +219,8 @@ export default function ProviderProfile() {
                           <div className="flex-1">
                             <div className="flex items-center">
                               <h3 className="font-medium">{credential.type}</h3>
-                              <CredentialBadge 
-                                type={credential.type}
+                              <CredentialStatusBadge 
                                 status={credential.status}
-                                badgeId={credential.badgeId}
-                                issuingAuthority={credential.issuingAuthority}
                                 className="ml-2"
                               />
                             </div>
