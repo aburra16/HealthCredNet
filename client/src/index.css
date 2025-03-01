@@ -127,13 +127,17 @@
 
   /* Card with dynamic gradient effect */
   .visualens-gradient-card {
-    @apply bg-white rounded-[20px] p-6 relative overflow-hidden;
+    @apply bg-transparent rounded-[20px] p-6 relative overflow-hidden;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.92) 100%);
+    backdrop-filter: blur(8px);
     box-shadow: 
-      0 10px 15px -3px rgba(0, 0, 0, 0.05),
-      0 4px 6px -2px rgba(0, 0, 0, 0.02);
+      0 15px 25px -3px rgba(0, 0, 0, 0.07),
+      0 8px 12px -2px rgba(0, 0, 0, 0.03),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(236, 240, 255, 0.7);
   }
 
-  .visualens-gradient-card::after {
+  .visualens-gradient-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -144,6 +148,15 @@
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     opacity: 0.8;
+  }
+  
+  .visualens-gradient-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at top right, rgba(236, 240, 255, 0.8), transparent 70%);
+    opacity: 0.6;
   }
 
   /* Modern geometric accent element */
@@ -167,7 +180,8 @@
   
   /* Form element common styles - Visualens inspired */
   .form-input {
-    @apply block w-full border-0 bg-gray-50/50 rounded-xl shadow-sm py-3.5 px-4 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-white transition-all duration-200 ease-in-out;
+    @apply block w-full border border-[#e5eaf9] bg-white/70 rounded-xl shadow-sm py-3.5 px-4 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 focus:bg-white/90 transition-all duration-200 ease-in-out;
+    backdrop-filter: blur(4px);
   }
   
   /* Modern table styling - Visualens inspired */
@@ -226,6 +240,34 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
+  
+  /* Login page animations */
+  .login-page .visualens-gradient-card {
+    animation: cardFadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  @keyframes cardFadeIn {
+    from { 
+      opacity: 0; 
+      transform: translateY(20px); 
+      box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.03);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+      box-shadow: 0 15px 25px -3px rgba(0, 0, 0, 0.07),
+                  0 8px 12px -2px rgba(0, 0, 0, 0.03);
+    }
+  }
+  
+  .login-page .visualens-accent {
+    animation: accentFadeIn 1.2s ease-out;
+  }
+  
+  @keyframes accentFadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.04; }
+  }
 
   .slide-in-right {
     animation: slideInRight 0.4s ease-in-out;
@@ -248,15 +290,31 @@
 
   /* Healthcare specific components */
   .credential-card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200;
+    @apply bg-white/90 backdrop-blur-sm rounded-xl shadow-md border border-gray-100/70 overflow-hidden hover:shadow-lg transition-all duration-200;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248, 250, 255, 0.85) 100%);
   }
   
   .credential-card:hover {
-    @apply border-blue-200;
+    @apply border-primary/20 translate-y-[-2px];
+  }
+  
+  .credential-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 0;
+    @apply bg-primary rounded-r;
+    transition: height 0.3s ease;
+  }
+  
+  .credential-card:hover::after {
+    height: 100%;
   }
   
   .medical-icon-bg {
-    @apply bg-blue-50 text-blue-600 p-2 rounded-full;
+    @apply bg-primary/10 text-primary p-3 rounded-xl;
   }
   
   /* Modern hover effects */

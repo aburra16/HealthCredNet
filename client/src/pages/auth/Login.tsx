@@ -8,6 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Login() {
+  // Add fade-in animation class
+  useEffect(() => {
+    document.documentElement.classList.add('login-page');
+    return () => {
+      document.documentElement.classList.remove('login-page');
+    };
+  }, []);
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [loginType, setLoginType] = useState<UserRole>('user');
@@ -191,8 +198,20 @@ export default function Login() {
       <div className="visualens-accent visualens-accent-3 text-primary absolute"></div>
       
       {/* Decorative geometric elements */}
+      {/* Top gradient bar */}
       <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-primary/5 to-background"></div>
+      
+      {/* Bottom right geometric shape */}
       <div className="absolute bottom-0 right-0 w-1/3 h-64 bg-gradient-to-tl from-primary/5 to-transparent rounded-tl-[100px]"></div>
+      
+      {/* Floating decorative elements - Visualens inspired */}
+      <div className="absolute top-[10%] left-[5%] w-16 h-16 bg-primary/5 rounded-full blur-xl"></div>
+      <div className="absolute top-[30%] right-[10%] w-24 h-24 bg-primary/3 rounded-full blur-xl"></div>
+      <div className="absolute bottom-[15%] left-[15%] w-20 h-20 bg-primary/2 rounded-full blur-xl"></div>
+      
+      {/* Geometric shapes */}
+      <div className="absolute top-[15%] right-[20%] w-8 h-8 border border-primary/10 rounded-lg rotate-12"></div>
+      <div className="absolute bottom-[30%] left-[10%] w-10 h-10 border border-primary/10 rounded-full"></div>
       
       <div className="max-w-md w-full space-y-8 relative z-10">
         <div className="text-center">
@@ -316,7 +335,7 @@ export default function Login() {
                   <div className="w-full border-t border-gray-100"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-muted-foreground font-medium">Or sign in manually</span>
+                  <span className="px-4 bg-transparent text-muted-foreground font-medium">Or sign in manually</span>
                 </div>
               </div>
             )}
