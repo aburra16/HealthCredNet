@@ -100,22 +100,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Nostr public key is required' });
       }
       
-      // STRICT SERVER-SIDE AUTHORITY LOGIN RESTRICTION
+      // ULTRA-STRICT AUTHORITY LOGIN RESTRICTION WITH TOKEN
       if (role === 'authority') {
-        // NosFabricaTest public key
-        const nosFabricaTestPubkey = 'npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu';
+        // Check for the required secret token
+        const authorityToken = req.body.authorityToken || "";
+        const requiredToken = "nosfabrica-test-9876543210";
         
         // Log the attempt
-        console.log(`Authority login attempt: ${nostrPubkey}`);
-        console.log(`Required pubkey: ${nosFabricaTestPubkey}`);
+        console.log(`Authority login attempt with token: ${authorityToken}`);
         
-        // Compare with NosFabricaTest pubkey
-        if (nostrPubkey !== nosFabricaTestPubkey) {
-          console.error('Authority login denied - unauthorized pubkey');
-          return res.status(403).json({ error: 'Only NosFabricaTest account can log in as an authority' });
+        // Check for the special token regardless of the pubkey
+        if (authorityToken !== requiredToken) {
+          console.error('Authority login BLOCKED - missing or invalid token');
+          return res.status(403).json({ 
+            error: 'Authority login requires valid authentication token',
+            message: 'This role is restricted to the NosFabricaTest account only'
+          });
         }
         
-        console.log('Authority login allowed - valid NosFabricaTest credentials');
+        // Verify it's NosFabricaTest public key as a double-check
+        const nosFabricaTestPubkey = 'npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu';
+        if (nostrPubkey !== nosFabricaTestPubkey) {
+          console.error('Authority login BLOCKED - wrong public key');
+          return res.status(403).json({ error: 'Authority login is restricted to NosFabricaTest account only' });
+        }
+        
+        console.log('Authority login allowed - valid NosFabricaTest credentials with token');
       }
       
       // Check if user exists

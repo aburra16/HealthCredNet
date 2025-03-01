@@ -33,7 +33,7 @@ export const clearAuth = (): void => {
  * 
  * Authority role is restricted to NosFabricaTest account only
  */
-export const login = async (publicKey: string, role: UserRole): Promise<AuthUser> => {
+export const login = async (publicKey: string, role: UserRole, authorityToken?: string): Promise<AuthUser> => {
   try {
     // Double-check authority restriction
     if (role === 'authority') {
@@ -42,6 +42,12 @@ export const login = async (publicKey: string, role: UserRole): Promise<AuthUser
       
       console.log("Authority login attempt:", publicKey);
       console.log("Required NosFabricaTest pubkey:", nosFabricaTestPubkey);
+      
+      // Check for token
+      if (!authorityToken) {
+        console.error("Authority login denied - missing token");
+        throw new Error('Authority login requires special token');
+      }
       
       // Verify it's NosFabricaTest
       if (publicKey !== nosFabricaTestPubkey) {
@@ -55,7 +61,12 @@ export const login = async (publicKey: string, role: UserRole): Promise<AuthUser
     // Ensure relay connection
     await connectToRelays();
     
-    const response = await apiRequest('POST', '/api/auth/login', { publicKey, role });
+    // Add the authorityToken for authority logins
+    const payload = role === 'authority' 
+      ? { publicKey, role, authorityToken }
+      : { publicKey, role };
+    
+    const response = await apiRequest('POST', '/api/auth/login', payload);
     const user = await response.json();
     saveAuth(user);
     return user;

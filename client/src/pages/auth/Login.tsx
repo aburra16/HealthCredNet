@@ -20,7 +20,9 @@ export default function Login() {
   const [loginType, setLoginType] = useState<UserRole>('user');
   const [publicKey, setPublicKey] = useState('');
   const [privateKey, setPrivateKey] = useState('');
+  const [authorityToken, setAuthorityToken] = useState('');
   const [showPrivateKey, setShowPrivateKey] = useState(false);
+  const [showToken, setShowToken] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasExtension, setHasExtension] = useState(false);
   
@@ -94,8 +96,22 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      // Authenticate user
-      const user = await login(publicKey, loginType);
+      // For authority login, include the token
+      let user;
+      if (loginType === 'authority') {
+        if (!authorityToken) {
+          toast({
+            title: "Authority login requires token",
+            description: "Please enter the NosFabricaTest authorization token",
+            variant: "destructive"
+          });
+          setIsLoading(false);
+          return;
+        }
+        user = await login(publicKey, loginType, authorityToken);
+      } else {
+        user = await login(publicKey, loginType);
+      }
       
       // Navigate to appropriate dashboard based on role
       switch (user.role) {
