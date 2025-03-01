@@ -44,9 +44,9 @@ export default function IssueCredential() {
   
   // Fetch credential requests
   const { data: requests, isLoading: isLoadingRequests } = useQuery({
-    queryKey: ['/api/credentials/requests', statusFilter],
+    queryKey: ['/api/credential-requests', statusFilter],
     queryFn: async () => {
-      const res = await fetch(`/api/credentials/requests?status=${statusFilter}`, {
+      const res = await fetch(`/api/credential-requests?status=${statusFilter}`, {
         credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to fetch requests');
@@ -85,7 +85,7 @@ export default function IssueCredential() {
     
     try {
       // Create new credential request
-      const response = await apiRequest('POST', '/api/credentials', {
+      const response = await apiRequest('POST', '/api/credential-requests', {
         providerId: parseInt(values.providerId),
         authorityId: auth.id,
         type: values.type,
@@ -98,7 +98,7 @@ export default function IssueCredential() {
       form.reset();
       
       // Invalidate queries to refetch data
-      queryClient.invalidateQueries({ queryKey: ['/api/credentials/requests'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/credential-requests'] });
       
       toast({
         title: "Credential request created",
@@ -286,9 +286,9 @@ export default function IssueCredential() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <span className={`badge ${
-                        request.status === 'approved' ? 'badge-success' :
-                        request.status === 'pending' ? 'badge-warning' :
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        request.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-red-100 text-red-800'
                       }`}>
                         {request.status === 'approved' ? 'Approved' :
