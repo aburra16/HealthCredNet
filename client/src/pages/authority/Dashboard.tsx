@@ -10,17 +10,18 @@ export default function AuthorityDashboard() {
   
   // Fetch credential requests
   const { data: requests, isLoading } = useQuery({
-    queryKey: ['/api/credentials/requests'],
+    queryKey: ['/api/credential-requests'],
     select: (data) => {
       return data.map((request: any) => ({
         id: request.id,
-        providerId: request.provider.id,
-        providerName: `Dr. ${request.provider.firstName} ${request.provider.lastName}`,
+        providerId: request.providerId,
+        providerName: `${request.provider.firstName} ${request.provider.lastName}`,
         providerSpecialty: request.provider.specialty,
-        providerImageUrl: request.provider.profileImageUrl || request.provider.user.profileImageUrl,
+        providerPublicKey: request.provider.nostrPubkey,
+        providerImageUrl: request.provider.profileImageUrl,
         credentialType: request.type,
         issuingAuthority: request.issuingAuthority,
-        requestDate: request.requestDate,
+        requestDate: request.createdAt,
         status: request.status,
         details: request.details
       }));

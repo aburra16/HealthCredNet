@@ -111,7 +111,7 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
       }
       
       // Update the credential with the badge ID
-      await apiRequest('PUT', `/api/credentials/${request.id}`, {
+      await apiRequest('PATCH', `/api/credential-requests/${request.id}`, {
         status: 'approved',
         badgeId: generatedBadgeId,
         issueDate: new Date().toISOString()
@@ -145,7 +145,7 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
     setIsSubmitting(true);
     
     try {
-      await apiRequest('PUT', `/api/credentials/${request.id}`, {
+      await apiRequest('PATCH', `/api/credential-requests/${request.id}`, {
         status: 'rejected'
       });
       
