@@ -36,19 +36,17 @@ export default function Header() {
               {/* User navigation */}
               {user.role === 'user' && (
                 <div className="flex space-x-4">
-                  <Link href="/dashboard">
-                    <a className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  <Link href="/dashboard" 
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       location === '/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
-                      Find Providers
-                    </a>
+                    Find Providers
                   </Link>
-                  <Link href="/dashboard/profile">
-                    <a className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  <Link href="/dashboard/profile" 
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       location === '/dashboard/profile' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
-                      My Profile
-                    </a>
+                    My Profile
                   </Link>
                 </div>
               )}
@@ -56,19 +54,17 @@ export default function Header() {
               {/* Provider navigation */}
               {user.role === 'provider' && (
                 <div className="flex space-x-4">
-                  <Link href="/dashboard">
-                    <a className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  <Link href="/dashboard"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       location === '/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       My Profile
-                    </a>
                   </Link>
-                  <Link href="/dashboard/credentials">
-                    <a className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  <Link href="/dashboard/credentials"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       location === '/dashboard/credentials' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       Credentials
-                    </a>
                   </Link>
                 </div>
               )}
@@ -76,26 +72,23 @@ export default function Header() {
               {/* Authority navigation */}
               {user.role === 'authority' && (
                 <div className="flex space-x-4">
-                  <Link href="/dashboard">
-                    <a className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  <Link href="/dashboard"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       location === '/dashboard' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       Dashboard
-                    </a>
                   </Link>
-                  <Link href="/dashboard/issue">
-                    <a className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  <Link href="/dashboard/issue"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       location === '/dashboard/issue' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       Issue Credentials
-                    </a>
                   </Link>
-                  <Link href="/dashboard/audit">
-                    <a className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  <Link href="/dashboard/audit"
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       location === '/dashboard/audit' ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}>
                       Audit Logs
-                    </a>
                   </Link>
                 </div>
               )}
