@@ -62,29 +62,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     
     try {
-      // Validate the private key
-      if (!validateNostrKey(nostrPrivkey)) {
+      // Check if we're using NIP-07 extension (nostrPrivkey will be empty)
+      const isExtensionLogin = nostrPrivkey === '';
+      
+      if (!isExtensionLogin) {
+        // For direct nsec login, validate the private key
+        if (!validateNostrKey(nostrPrivkey)) {
+          toast({
+            title: "Invalid Nostr Key",
+            description: "Please provide a valid Nostr private key (nsec1...)",
+            variant: "destructive"
+          });
+          setLoading(false);
+          return;
+        }
+      }
+      
+      // Validate the public key (for both extension and direct login)
+      if (!nostrPubkey || !nostrPubkey.startsWith('npub1')) {
         toast({
-          title: "Invalid Nostr Key",
-          description: "Please provide a valid Nostr private key (nsec1...)",
+          title: "Invalid Public Key",
+          description: "The public key format is invalid",
           variant: "destructive"
         });
         setLoading(false);
         return;
       }
       
-      // We already derived the public key in the login form, just use it here
       // Send the authentication request with the public key
       const response = await apiRequest('POST', '/api/auth/login', {
-        nostrPubkey, // This is the npub derived from nsec
-        role
+        nostrPubkey,
+        role,
+        loginMethod: isExtensionLogin ? 'extension' : 'privatekey'
       });
       
       const userData = await response.json();
       
-      // Store the user data and private key
+      // Store the user data
       localStorage.setItem('medcred_user', JSON.stringify(userData));
-      localStorage.setItem('medcred_privkey', nostrPrivkey);
+      
+      // Only store the private key if using direct nsec login
+      if (!isExtensionLogin) {
+        localStorage.setItem('medcred_privkey', nostrPrivkey);
+      }
       
       setUser(userData);
       setIsAuthenticated(true);
