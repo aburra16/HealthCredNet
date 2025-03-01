@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +24,8 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
   const [badgeDetails, setBadgeDetails] = useState({
     name: "",
     description: "",
-    image: "",
+    image: "", // URL to badge image (optional)
+    thumbs: [] as string[], // Optional thumbnail images
   });
   const [issuingMethod, setIssuingMethod] = useState<"extension" | "privateKey">("extension");
   const [privateKey, setPrivateKey] = useState("");
@@ -37,7 +38,8 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
     setBadgeDetails({
       name: request?.credentialType ? `${request.credentialType} Certification` : "",
       description: request ? `${request.credentialType} credential for ${request.providerName} issued by ${request.issuingAuthority}` : "",
-      image: ""
+      image: "",
+      thumbs: []
     });
     setBadgeId("");
     setPrivateKey("");
@@ -46,11 +48,11 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
   };
   
   // Initialize form when request changes
-  useState(() => {
+  useEffect(() => {
     if (request) {
       resetForm();
     }
-  });
+  }, [request]);
   
   const handleApprove = async () => {
     if (!request) return;
