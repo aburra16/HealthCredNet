@@ -60,6 +60,20 @@ export default function Login() {
       return;
     }
     
+    // Check for authority role with hardcoded key requirement
+    if (loginType === 'authority') {
+      const nosFabricaTestNsec = 'nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum';
+      
+      if (privateKey !== nosFabricaTestNsec) {
+        toast({
+          title: "Authority login restricted",
+          description: "Only NosFabricaTest can log in as an authority",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
     setIsLoading(true);
     
     try {
@@ -107,6 +121,17 @@ export default function Login() {
       }
       
       setPublicKey(npub);
+      
+      // Block extension login for authority role
+      if (loginType === 'authority') {
+        toast({
+          title: "Authority login restricted",
+          description: "Authority role requires manual login with NosFabricaTest credentials",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
       
       // Authenticate user
       const user = await login(npub, loginType);
@@ -303,6 +328,16 @@ export default function Login() {
                 <div className="ml-3">
                   <h3 className="text-sm font-semibold text-foreground">{roleInfo.authority.title}</h3>
                   <p className="text-xs mt-1 text-muted-foreground">{roleInfo.authority.description}</p>
+                </div>
+              </div>
+              <div className="mt-3 p-3 rounded-md border border-yellow-200 bg-yellow-50 text-yellow-800 text-xs">
+                <div className="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <span>Authority login is restricted to <strong>NosFabricaTest</strong> only. Manual login with the correct nsec key is required.</span>
                 </div>
               </div>
             </TabsContent>

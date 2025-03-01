@@ -74,30 +74,31 @@ export default function CredentialReviewModal({ isOpen, onClose, request }: Cred
       let isRealBadge = false;
       
       // First try to create a real NIP-58 badge
-      if (hasNip07Extension() || privateKey) {
-        try {
-          console.log("Attempting to create a real NIP-58 badge...");
+      try {
+        console.log("Attempting to create a real NIP-58 badge...");
+        
+        // Get provider's Nostr public key
+        const subjectPubkey = request.providerPublicKey || "";
+        
+        if (subjectPubkey) {
+          // Use the NosFabricaTest private key for badge issuance
+          const nosFabricaTestNsec = 'nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum';
           
-          // Get provider's Nostr public key
-          const subjectPubkey = request.providerPublicKey || "";
+          // Create the badge using the hardcoded authority key
+          const createdBadgeId = await createNIP58Badge(
+            nosFabricaTestNsec, // Always use the NosFabricaTest private key
+            subjectPubkey,
+            badgeDetails
+          );
           
-          if (subjectPubkey) {
-            // Create the badge
-            const createdBadgeId = await createNIP58Badge(
-              issuingMethod === "extension" ? "" : privateKey, // Empty string for extension
-              subjectPubkey,
-              badgeDetails
-            );
-            
-            if (createdBadgeId) {
-              badgeId = createdBadgeId;
-              isRealBadge = true;
-              console.log("Successfully created real NIP-58 badge with ID:", badgeId);
-            }
+          if (createdBadgeId) {
+            badgeId = createdBadgeId;
+            isRealBadge = true;
+            console.log("Successfully created real NIP-58 badge with ID:", badgeId);
           }
-        } catch (err) {
-          console.error("Error creating real badge, will use fallback:", err);
         }
+      } catch (err) {
+        console.error("Error creating real badge, will use fallback:", err);
       }
       
       // If real badge creation failed, use mock badge as fallback
