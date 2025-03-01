@@ -125,19 +125,22 @@
     @apply opacity-100;
   }
 
-  /* Simple glass-like card without border */
+  /* Modern metallic card with subtle dimensionality */
   .visualens-gradient-card {
-    @apply p-0 m-0 bg-transparent relative;
+    @apply p-0 m-0 relative;
   }
   
-  /* Pure glass-morphism content area */
+  /* Refined metallic content area */
   .visualens-gradient-card > div {
     @apply p-6 rounded-[20px];
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, 
+      rgba(245, 247, 250, 0.97) 0%,
+      rgba(240, 242, 247, 0.95) 100%);
     box-shadow: 
-      0 15px 25px -5px rgba(0, 0, 0, 0.08),
-      0 8px 12px -3px rgba(0, 0, 0, 0.05);
+      0 0 0 1px rgba(180, 190, 210, 0.2),
+      0 12px 24px -6px rgba(15, 23, 42, 0.08),
+      0 4px 6px -2px rgba(15, 23, 42, 0.03),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
   }
 
   /* Modern geometric accent element */
@@ -161,8 +164,21 @@
   
   /* Form element common styles - Visualens inspired */
   .form-input {
-    @apply block w-full border border-[#e5eaf9] bg-white/70 rounded-xl shadow-sm py-3.5 px-4 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 focus:bg-white/90 transition-all duration-200 ease-in-out;
-    backdrop-filter: blur(4px);
+    @apply block w-full rounded-xl py-3.5 px-4 text-foreground transition-all duration-200 ease-in-out;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 247, 250, 0.85) 100%);
+    box-shadow: 
+      0 0 0 1px rgba(180, 190, 210, 0.2),
+      0 1px 2px rgba(15, 23, 42, 0.05),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+  }
+  
+  .form-input:focus {
+    @apply outline-none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 252, 255, 0.92) 100%);
+    box-shadow: 
+      0 0 0 2px rgba(65, 91, 232, 0.25),
+      0 1px 2px rgba(15, 23, 42, 0.05),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
   }
   
   /* Modern table styling - Visualens inspired */
@@ -271,12 +287,21 @@
 
   /* Healthcare specific components */
   .credential-card {
-    @apply bg-white/90 backdrop-blur-sm rounded-xl shadow-md border border-gray-100/70 overflow-hidden hover:shadow-lg transition-all duration-200;
-    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248, 250, 255, 0.85) 100%);
+    @apply rounded-xl overflow-hidden transition-all duration-200 relative;
+    background: linear-gradient(135deg, rgba(245, 247, 250, 0.97) 0%, rgba(240, 242, 247, 0.95) 100%);
+    box-shadow: 
+      0 0 0 1px rgba(180, 190, 210, 0.2),
+      0 4px 12px -2px rgba(15, 23, 42, 0.08),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
   }
   
   .credential-card:hover {
-    @apply border-primary/20 translate-y-[-2px];
+    transform: translateY(-2px);
+    box-shadow: 
+      0 0 0 1px rgba(180, 190, 210, 0.25),
+      0 8px 24px -4px rgba(15, 23, 42, 0.12),
+      0 4px 8px -2px rgba(15, 23, 42, 0.05),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
   }
   
   .credential-card::after {
@@ -286,7 +311,8 @@
     left: 0;
     width: 4px;
     height: 0;
-    @apply bg-primary rounded-r;
+    background: linear-gradient(180deg, #4A5BE1, #3D52D0);
+    @apply rounded-r;
     transition: height 0.3s ease;
   }
   
@@ -295,7 +321,9 @@
   }
   
   .medical-icon-bg {
-    @apply bg-primary/10 text-primary p-3 rounded-xl;
+    background: linear-gradient(135deg, rgba(74, 91, 225, 0.15) 0%, rgba(61, 82, 208, 0.1) 100%);
+    @apply text-primary p-3 rounded-xl;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
   }
   
   /* Modern hover effects */

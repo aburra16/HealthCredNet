@@ -318,7 +318,11 @@ export default function Login() {
             {hasExtension && (
               <Button
                 type="button"
-                className="w-full mt-6 bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-2 py-6 rounded-xl shadow-lg shadow-primary/10"
+                className="w-full mt-6 text-white flex items-center justify-center gap-2 py-6 rounded-xl transition-all"
+                style={{
+                  background: "linear-gradient(180deg, #4A5BE1, #3D52D0)",
+                  boxShadow: "0 1px 1px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 16px -4px rgba(65, 91, 232, 0.3)"
+                }}
                 onClick={handleExtensionLogin}
                 disabled={isLoading}
               >
@@ -399,7 +403,11 @@ export default function Login() {
               <div>
                 <Button
                   type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-2 py-6 rounded-xl shadow-lg shadow-primary/10 transition-all"
+                  className="w-full text-white flex items-center justify-center gap-2 py-6 rounded-xl transition-all"
+                  style={{
+                    background: "linear-gradient(180deg, #4A5BE1, #3D52D0)",
+                    boxShadow: "0 1px 1px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 16px -4px rgba(65, 91, 232, 0.3)"
+                  }}
                   disabled={isLoading}
                 >
                   {isLoading ? (
