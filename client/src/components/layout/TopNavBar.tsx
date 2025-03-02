@@ -18,14 +18,14 @@ import { ModeToggle } from "@/components/theme/mode-toggle";
 export default function TopNavBar() {
   const { user, logout } = useAuth();
   const [location] = useLocation();
-  
+
   // If no user is logged in, don't show the navigation bar
   if (!user) return null;
-  
+
   const isActive = (path: string) => {
     return location === path;
   };
-  
+
   return (
     <div className="sticky top-0 z-50 w-full bg-background shadow-md">
       <div className="px-4 py-2.5 mx-auto max-w-7xl">
@@ -40,7 +40,7 @@ export default function TopNavBar() {
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground -mt-1">Trusted Verifications</span>
             </div>
           </Link>
-          
+
           {/* Navigation Links */}
           <div className="flex items-center space-x-1">
             {/* Home */}
@@ -57,7 +57,23 @@ export default function TopNavBar() {
                 <span className="hidden sm:inline text-xs font-medium">Home</span>
               </Button>
             </Link>
-            
+
+            {/* Mantine Example Link */}
+            <Link href="/mantine-example">
+              <Button 
+                variant={isActive('/mantine-example') ? "default" : "ghost"} 
+                size="sm" 
+                className={cn(
+                  "flex items-center gap-1.5 rounded-md h-9",
+                  isActive('/mantine-example') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
+                )}
+              >
+                <HomeIcon className="w-4 h-4" /> {/* Using HomeIcon as a placeholder; replace with appropriate icon */}
+                <span className="hidden sm:inline text-xs font-medium">Mantine UI</span>
+              </Button>
+            </Link>
+
+
             {/* User-specific navigation */}
             {user.role === 'user' && (
               <>
@@ -89,7 +105,7 @@ export default function TopNavBar() {
                 </Link>
               </>
             )}
-            
+
             {/* Provider-specific navigation */}
             {user.role === 'provider' && (
               <>
@@ -121,7 +137,7 @@ export default function TopNavBar() {
                 </Link>
               </>
             )}
-            
+
             {/* Authority-specific navigation */}
             {user.role === 'authority' && (
               <>
@@ -166,7 +182,7 @@ export default function TopNavBar() {
                 </Link>
               </>
             )}
-            
+
             {/* User Info, Theme Toggle and Logout */}
             <div className="flex items-center pl-3 ml-3 border-l border-border">
               <div className="flex flex-col mr-2 text-xs">
