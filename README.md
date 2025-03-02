@@ -8,13 +8,13 @@ The project follows a modern full-stack JavaScript architecture with React/TypeS
 
 ## Core Technologies
 
-- **Frontend**: React, TypeScript, Tailwind CSS, ShadcnUI
+- **Frontend**: React, TypeScript, Mantine UI
 - **Backend**: Express.js, Node.js
 - **Authentication**: Nostr protocol (NIP-07 extension support + direct key authentication)
 - **State Management**: TanStack Query (React Query)
 - **Routing**: Wouter
 - **Form Management**: React Hook Form with Zod validation
-- **Styling**: Tailwind CSS with ShadcnUI components
+- **Styling**: Mantine UI with custom healthcare theme
 
 ## Project Structure
 
@@ -103,10 +103,18 @@ The project follows a modern full-stack JavaScript architecture with React/TypeS
 - **User Pages**: Provider search, credential verification
 
 #### UI Components
-- ShadcnUI components extended for application requirements
+- Mantine UI components with custom healthcare theme
 - Role-specific components (Authority, Provider, User)
 - Credential display and verification components
-- Layout and navigation components
+- Layout and navigation components with role-based styling
+- Semantic color system for credential status and specialties
+
+#### Healthcare Theme (`client/src/lib/theme.ts`)
+- Custom healthcare color palette with medical blue, healing teal, and trust purple
+- Semantic colors for credential status (verified, pending, rejected)
+- Specialty-specific color coding for visual identification
+- Modern, clean UI design optimized for healthcare applications
+- Consistent styling across all user persona views
 
 ## Authentication Flow
 
@@ -176,6 +184,9 @@ The core functionality is implemented, including:
 3. ✅ Provider profiles with credential showcase
 4. ✅ User interface for finding and verifying providers
 5. ✅ NIP-58 badge creation and verification
+6. ✅ Custom healthcare theme with Mantine UI
+7. ✅ Role-based color schemes for intuitive UI
+8. ✅ Semantic credential status visualization
 
 ## Enhancement Opportunities
 
@@ -236,11 +247,12 @@ The core functionality is implemented, including:
 ## Code Conventions
 
 - **Components**: Functional components with hooks
-- **Styling**: Tailwind CSS with ShadcnUI components
+- **Styling**: Mantine UI with custom healthcare theme
 - **Data Fetching**: TanStack Query with SWR-like patterns
 - **Forms**: React Hook Form with Zod validation
 - **Error Handling**: Toast notifications for user feedback
 - **Type Safety**: Strict TypeScript typing throughout
+- **Theming**: Semantic color system based on user roles
 
 ## Deployment Considerations
 
