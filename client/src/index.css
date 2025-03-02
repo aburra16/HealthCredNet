@@ -157,6 +157,8 @@
   
   /* Dark mode card styling */
   .dark .card {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
   }
   
@@ -262,6 +264,10 @@
   /* Form element common styles - Visualens inspired */
   .form-input {
     @apply block w-full rounded-xl py-3.5 px-4 text-foreground transition-all duration-200 ease-in-out;
+  }
+  
+  /* Light mode input styling */
+  :root .form-input {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 247, 250, 0.85) 100%);
     box-shadow: 
       0 0 0 1px rgba(180, 190, 210, 0.2),
@@ -269,7 +275,7 @@
       inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
   }
   
-  .form-input:focus {
+  :root .form-input:focus {
     @apply outline-none;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 252, 255, 0.92) 100%);
     box-shadow: 
@@ -278,9 +284,27 @@
       inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
   }
   
+  /* Dark mode input styling */
+  .dark .form-input {
+    background: linear-gradient(180deg, rgba(35, 38, 45, 0.9) 0%, rgba(30, 33, 40, 0.95) 100%);
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  .dark .form-input:focus {
+    @apply outline-none;
+    background: linear-gradient(180deg, rgba(40, 44, 52, 0.95) 0%, rgba(35, 39, 47, 0.98) 100%);
+    box-shadow: 
+      0 0 0 2px rgba(90, 120, 255, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+  
   /* Modern table styling - Visualens inspired */
   .table-modern {
-    @apply min-w-full divide-y divide-gray-100 overflow-hidden rounded-xl;
+    @apply min-w-full divide-y divide-border overflow-hidden rounded-xl;
   }
   
   .table-modern thead {
@@ -291,16 +315,30 @@
     @apply px-6 py-4 text-left text-xs font-medium uppercase tracking-wider;
   }
   
-  .table-modern tbody {
+  /* Light mode table */
+  :root .table-modern tbody {
     @apply bg-white;
   }
   
-  .table-modern tbody tr {
+  :root .table-modern tbody tr {
     @apply hover:bg-gray-50/50 transition-colors duration-150;
   }
   
-  .table-modern td {
+  :root .table-modern td {
     @apply px-6 py-4 whitespace-nowrap text-sm text-gray-600;
+  }
+  
+  /* Dark mode table */
+  .dark .table-modern tbody {
+    @apply bg-card;
+  }
+  
+  .dark .table-modern tbody tr {
+    @apply hover:bg-muted/50 transition-colors duration-150;
+  }
+  
+  .dark .table-modern td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-muted-foreground;
   }
   
   /* Layout classes */
@@ -384,7 +422,11 @@
 
   /* Healthcare specific components */
   .credential-card {
-    @apply rounded-xl overflow-hidden transition-all duration-200 relative;
+    @apply rounded-xl overflow-hidden transition-all duration-200 relative text-foreground;
+  }
+  
+  /* Light mode credential card */
+  :root .credential-card {
     background: linear-gradient(135deg, rgba(245, 247, 250, 0.97) 0%, rgba(240, 242, 247, 0.95) 100%);
     box-shadow: 
       0 0 0 1px rgba(180, 190, 210, 0.2),
@@ -392,13 +434,33 @@
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
   }
   
-  .credential-card:hover {
+  :root .credential-card:hover {
     transform: translateY(-2px);
     box-shadow: 
       0 0 0 1px rgba(180, 190, 210, 0.25),
       0 8px 24px -4px rgba(15, 23, 42, 0.12),
       0 4px 8px -2px rgba(15, 23, 42, 0.05),
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  
+  /* Dark mode credential card */
+  .dark .credential-card {
+    background: linear-gradient(135deg, 
+      rgba(35, 38, 45, 0.95) 0%, 
+      rgba(28, 31, 38, 0.98) 100%);
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 4px 12px -2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  .dark .credential-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      0 8px 24px -4px rgba(0, 0, 0, 0.3),
+      0 4px 8px -2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.07);
   }
   
   .credential-card::after {
@@ -417,10 +479,18 @@
     height: 100%;
   }
   
-  .medical-icon-bg {
+  /* Light mode icon background */
+  :root .medical-icon-bg {
     background: linear-gradient(135deg, rgba(74, 91, 225, 0.15) 0%, rgba(61, 82, 208, 0.1) 100%);
     @apply text-primary p-3 rounded-xl;
     box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
+  }
+  
+  /* Dark mode icon background */
+  .dark .medical-icon-bg {
+    background: linear-gradient(135deg, rgba(74, 91, 225, 0.2) 0%, rgba(61, 82, 208, 0.15) 100%);
+    @apply text-primary p-3 rounded-xl;
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
   }
   
   /* Modern hover effects */
