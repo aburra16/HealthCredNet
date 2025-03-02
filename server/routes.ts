@@ -91,7 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication route with strict authority restriction
   router.post('/auth/login', async (req: Request, res: Response) => {
     try {
-      const { publicKey, role } = req.body;
+      const { publicKey, role, authorityToken } = req.body;
       
       // Extract the Nostr public key from the request (sometimes it's sent as nostrPubkey)
       const nostrPubkey = req.body.nostrPubkey || publicKey;
@@ -102,15 +102,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // ULTRA-STRICT AUTHORITY LOGIN RESTRICTION WITH TOKEN
       if (role === 'authority') {
-        // Check for the required secret token
-        const authorityToken = req.body.authorityToken || "";
+        // The required hardcoded token
         const requiredToken = "nosfabrica-test-9876543210";
         
-        // Log the attempt
-        console.log(`Authority login attempt with token: ${authorityToken}`);
+        // Log the attempt but don't show the full token in logs for security
+        console.log(`Authority login attempt received with token: ${authorityToken ? 'provided' : 'missing'}`);
         
         // Check for the special token regardless of the pubkey
-        if (authorityToken !== requiredToken) {
+        if (!authorityToken || authorityToken !== requiredToken) {
           console.error('Authority login BLOCKED - missing or invalid token');
           return res.status(403).json({ 
             error: 'Authority login requires valid authentication token',

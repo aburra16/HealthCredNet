@@ -97,11 +97,22 @@ export default function Login() {
           return;
         }
         
-        console.log("NosFabricaTest credentials verified, using hardcoded token");
+        console.log("NosFabricaTest credentials verified, proceeding with login");
         
-        // For authority, use the NosFabricaTest pubkey and hardcoded token
-        // This bypasses any state updates that might not have happened yet
-        user = await login(nosFabricaTestPubkey, loginType, "nosfabrica-test-9876543210");
+        try {
+          // For authority, use the hardcoded token and NosFabricaTest pubkey 
+          // (instead of the form state variable which might not be updated)
+          user = await login(nosFabricaTestPubkey, loginType, "nosfabrica-test-9876543210");
+        } catch (authError) {
+          console.error("Authority login server error:", authError);
+          toast({
+            title: "Authority authentication failed",
+            description: "Server rejected the authority credentials. Please try again.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
       } else {
         // For non-authority roles, use the standard login flow
         user = await login(publicKey, loginType);
