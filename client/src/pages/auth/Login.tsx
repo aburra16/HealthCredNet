@@ -62,64 +62,48 @@ export default function Login() {
       return;
     }
     
-    // Check for authority role with hardcoded key requirement
-    if (loginType === 'authority') {
-      const nosFabricaTestNsec = 'nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum';
-      const nosFabricaTestPubkey = 'npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu';
-      
-      // Strictly check private key for authority logins
-      if (!privateKey) {
-        console.error("Authority login attempt without nsec key");
-        toast({
-          title: "Authority login restricted",
-          description: "You must provide the NosFabricaTest private key to log in as an authority",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      console.log("Validating authority credentials...");
-      
-      // Do exact string comparison for authority restriction
-      if (privateKey !== nosFabricaTestNsec) {
-        console.error("Authority login attempt with incorrect nsec key");
-        toast({
-          title: "Authority login denied",
-          description: "Only the official NosFabricaTest account can log in as an authority. Your credentials don't match.",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      console.log("NosFabricaTest credentials verified");
-      
-      // Override the public key with the NosFabricaTest public key
-      // This ensures we're using the correct key pair
-      setPublicKey(nosFabricaTestPubkey);
-      
-      // For NosFabricaTest, always use the hardcoded token
-      setAuthorityToken("nosfabrica-test-9876543210");
-    }
-    
     setIsLoading(true);
     
     try {
-      // For authority login, include the token
+      // Special handling for authority role
       let user;
       if (loginType === 'authority') {
-        if (!authorityToken) {
+        const nosFabricaTestNsec = 'nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum';
+        const nosFabricaTestPubkey = 'npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu';
+        
+        // Strictly check private key for authority logins
+        if (!privateKey) {
+          console.error("Authority login attempt without nsec key");
           toast({
-            title: "Authority login requires token",
-            description: "Please enter the NosFabricaTest authorization token",
-            variant: "destructive"
+            title: "Authority login restricted",
+            description: "You must provide the NosFabricaTest private key to log in as an authority",
+            variant: "destructive",
           });
           setIsLoading(false);
           return;
         }
-        // For authority login, always use the hardcoded token to be safe
-        const finalToken = "nosfabrica-test-9876543210";
-        user = await login(publicKey, loginType, finalToken);
+        
+        console.log("Validating authority credentials...");
+        
+        // Do exact string comparison for authority restriction
+        if (privateKey !== nosFabricaTestNsec) {
+          console.error("Authority login attempt with incorrect nsec key");
+          toast({
+            title: "Authority login denied",
+            description: "Only the official NosFabricaTest account can log in as an authority. Your credentials don't match.",
+            variant: "destructive",
+          });
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log("NosFabricaTest credentials verified, using hardcoded token");
+        
+        // For authority, use the NosFabricaTest pubkey and hardcoded token
+        // This bypasses any state updates that might not have happened yet
+        user = await login(nosFabricaTestPubkey, loginType, "nosfabrica-test-9876543210");
       } else {
+        // For non-authority roles, use the standard login flow
         user = await login(publicKey, loginType);
       }
       
