@@ -104,7 +104,7 @@ export default function TopNavBar() {
                   variant={isActive('/dashboard/profile') ? "light" : "subtle"}
                   color="blue"
                   size="compact-sm"
-                  leftSection={<User size={16} />}
+                  leftSection={<User size="16" />}
                 >
                   Profile
                 </Button>
@@ -120,7 +120,7 @@ export default function TopNavBar() {
                   variant={isActive('/dashboard') ? "light" : "subtle"}
                   color="blue"
                   size="compact-sm"
-                  leftSection={<User size={16} />}
+                  leftSection={<User size="16" />}
                 >
                   Profile
                 </Button>
@@ -130,7 +130,7 @@ export default function TopNavBar() {
                   variant={isActive('/dashboard/credentials') ? "light" : "subtle"}
                   color="blue"
                   size="compact-sm"
-                  leftSection={<Award size={16} />}
+                  leftSection={<Award size="16" />}
                 >
                   Credentials
                 </Button>
@@ -146,7 +146,7 @@ export default function TopNavBar() {
                   variant={isActive('/authority/dashboard') ? "light" : "subtle"}
                   color="blue"
                   size="compact-sm"
-                  leftSection={<BarChart4 size={16} />}
+                  leftSection={<BarChart4 size="16" />}
                 >
                   Dashboard
                 </Button>
@@ -156,7 +156,7 @@ export default function TopNavBar() {
                   variant={isActive('/authority/issue') ? "light" : "subtle"}
                   color="blue"
                   size="compact-sm"
-                  leftSection={<FileCheck size={16} />}
+                  leftSection={<FileCheck size="16" />}
                 >
                   Issue Credentials
                 </Button>
@@ -166,7 +166,7 @@ export default function TopNavBar() {
                   variant={isActive('/authority/audit-logs') ? "light" : "subtle"}
                   color="blue"
                   size="compact-sm"
-                  leftSection={<ClipboardList size={16} />}
+                  leftSection={<ClipboardList size="16" />}
                 >
                   Audit Logs
                 </Button>
@@ -199,14 +199,14 @@ export default function TopNavBar() {
             <Menu.Dropdown>
               <Menu.Label>Account</Menu.Label>
               <Menu.Item 
-                leftSection={<User size={14} />}
+                leftSection={<User size="14" />}
                 component={Link} 
                 href="/dashboard/profile"
               >
                 My Profile
               </Menu.Item>
               <Menu.Item 
-                leftSection={<Award size={14} />}
+                leftSection={<Award size="14" />}
                 component={Link} 
                 href="/dashboard/credentials"
               >
@@ -215,7 +215,7 @@ export default function TopNavBar() {
               <Menu.Divider />
               <Menu.Item 
                 color="red" 
-                leftSection={<LogOut size={14} />}
+                leftSection={<LogOut size="14" />}
                 onClick={logout}
               >
                 Logout
