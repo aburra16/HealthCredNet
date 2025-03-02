@@ -124,7 +124,7 @@ The project follows a modern full-stack JavaScript architecture with React/TypeS
    - Direct nsec key input (all roles)
 3. **Authority Restriction**:
    - Only the NosFabricaTest account can authenticate as an authority
-   - Requires valid nsec key: `nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum`
+   - Requires the NosFabricaTest nsec key (private - never share publicly)
    - Requires hardcoded token: `nosfabrica-test-9876543210`
 4. **Session Management**: Authentication state stored in localStorage
 
@@ -206,7 +206,7 @@ The core functionality is implemented, including:
 
 2. **Authority Login**:
    - Use the NosFabricaTest credentials:
-     - nsec: `nsec18r04f8s6u6z6uestrtyn2xh6jjlrgpgapa6mg75fth97sh2hn2dqccjlum`
+     - Requires the NosFabricaTest nsec key (private - contact admin for access)
      - npub: `npub1uvc02wxk75r06n5wu8jwg8w3slycyw9hqpxlgngprdty393tv87s3wfcxu`
    - Token is auto-filled: `nosfabrica-test-9876543210`
 
@@ -271,6 +271,8 @@ The core functionality is implemented, including:
 4. **Security**:
    - Add rate limiting for authentication attempts
    - Implement CSRF protection
+   - Keep all nsec keys secure and never expose them in documentation or code
+   - Consider environment variables for all sensitive values
 
 ## Development Workflow
 
