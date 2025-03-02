@@ -109,16 +109,6 @@ export default function TopNavBar() {
                   Profile
                 </Button>
               </Link>
-              <Link href="/dashboard/profile-mantine">
-                <Button
-                  variant={isActive('/dashboard/profile-mantine') ? "light" : "subtle"}
-                  color="blue"
-                  size="compact-sm"
-                  leftSection={<User size="16" />}
-                >
-                  Mantine Profile
-                </Button>
-              </Link>
             </>
           )}
 
@@ -133,16 +123,6 @@ export default function TopNavBar() {
                   leftSection={<User size="16" />}
                 >
                   Profile
-                </Button>
-              </Link>
-              <Link href="/dashboard/profile-mantine">
-                <Button
-                  variant={isActive('/dashboard/profile-mantine') ? "light" : "subtle"}
-                  color="blue"
-                  size="compact-sm"
-                  leftSection={<User size="16" />}
-                >
-                  Mantine Profile
                 </Button>
               </Link>
               <Link href="/dashboard/credentials">
@@ -229,8 +209,9 @@ export default function TopNavBar() {
                 leftSection={<User size="14" />}
                 component={Link} 
                 href="/dashboard/profile-mantine"
+                c="dimmed"
               >
-                Mantine Profile
+                Mantine Profile (Dev)
               </Menu.Item>
               <Menu.Item 
                 leftSection={<Award size="14" />}
