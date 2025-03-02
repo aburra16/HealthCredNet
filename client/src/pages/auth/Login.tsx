@@ -254,7 +254,7 @@ export default function Login() {
   const currentRole = roleInfo[loginType];
   
   return (
-    <div className="visualens-accent-top min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#fafbff] relative overflow-hidden">
+    <div className="login-page visualens-accent-top min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 bg-[#fafbff] relative overflow-hidden">
       {/* Visual accent elements */}
       <div className="visualens-accent visualens-accent-1 text-primary absolute"></div>
       <div className="visualens-accent visualens-accent-2 text-primary/80 absolute"></div>
