@@ -9,11 +9,23 @@ import {
   BarChart4, 
   LogOut,
   BrainCircuit,
-  Shield
+  Shield,
+  Palette
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ModeToggle } from "@/components/theme/mode-toggle";
+import { 
+  AppShell, 
+  Avatar, 
+  Group, 
+  Title, 
+  Text, 
+  Button, 
+  rem, 
+  Divider, 
+  ActionIcon,
+  Menu,
+  UnstyledButton,
+  Box
+} from '@mantine/core';
 
 export default function TopNavBar() {
   const { user, logout } = useAuth();
@@ -27,184 +39,191 @@ export default function TopNavBar() {
   };
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-background shadow-md">
-      <div className="px-4 py-2.5 mx-auto max-w-7xl">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2.5">
-            <div className="bg-primary text-white p-2 rounded-md flex items-center justify-center">
-              <Shield className="h-5 w-5 stroke-[2.5px]" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold text-primary tracking-tight">MedCred</span>
-              <span className="text-[10px] uppercase tracking-widest text-muted-foreground -mt-1">Trusted Verifications</span>
-            </div>
+    <AppShell.Header p="xs">
+      <Group justify="space-between" h="100%">
+        {/* Logo */}
+        <Group>
+          <Link href="/">
+            <Group gap={rem(10)}>
+              <Avatar 
+                color="blue" 
+                radius="md"
+                style={{ width: rem(36), height: rem(36) }}
+              >
+                <Shield size={20} stroke={2.5} />
+              </Avatar>
+              <Box>
+                <Title order={4} fw={700} c="blue">MedCred</Title>
+                <Text size="xs" tt="uppercase" c="dimmed" fw={500} lts={1}>Trusted Verifications</Text>
+              </Box>
+            </Group>
+          </Link>
+        </Group>
+
+        {/* Navigation Links */}
+        <Group>
+          {/* Home */}
+          <Link href="/">
+            <Button
+              variant={isActive('/') ? "light" : "subtle"}
+              color="blue"
+              size="compact-sm"
+              leftSection={<HomeIcon size={16} />}
+            >
+              Home
+            </Button>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-1">
-            {/* Home */}
-            <Link href="/">
-              <Button 
-                variant={isActive('/') ? "default" : "ghost"} 
-                size="sm" 
-                className={cn(
-                  "flex items-center gap-1.5 rounded-md h-9",
-                  isActive('/') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                )}
+          {/* Mantine Example Link */}
+          <Link href="/mantine-example">
+            <Button
+              variant={isActive('/mantine-example') ? "light" : "subtle"}
+              color="blue"
+              size="compact-sm"
+              leftSection={<Palette size={16} />}
+            >
+              Mantine UI
+            </Button>
+          </Link>
+
+          {/* User-specific navigation */}
+          {user.role === 'user' && (
+            <>
+              <Link href="/dashboard">
+                <Button
+                  variant={isActive('/dashboard') ? "light" : "subtle"}
+                  color="blue"
+                  size="compact-sm"
+                  leftSection={<BrainCircuit size={16} />}
+                >
+                  Find Providers
+                </Button>
+              </Link>
+              <Link href="/dashboard/profile">
+                <Button
+                  variant={isActive('/dashboard/profile') ? "light" : "subtle"}
+                  color="blue"
+                  size="compact-sm"
+                  leftSection={<User size={16} />}
+                >
+                  Profile
+                </Button>
+              </Link>
+            </>
+          )}
+
+          {/* Provider-specific navigation */}
+          {user.role === 'provider' && (
+            <>
+              <Link href="/dashboard">
+                <Button
+                  variant={isActive('/dashboard') ? "light" : "subtle"}
+                  color="blue"
+                  size="compact-sm"
+                  leftSection={<User size={16} />}
+                >
+                  Profile
+                </Button>
+              </Link>
+              <Link href="/dashboard/credentials">
+                <Button
+                  variant={isActive('/dashboard/credentials') ? "light" : "subtle"}
+                  color="blue"
+                  size="compact-sm"
+                  leftSection={<Award size={16} />}
+                >
+                  Credentials
+                </Button>
+              </Link>
+            </>
+          )}
+
+          {/* Authority-specific navigation */}
+          {user.role === 'authority' && (
+            <>
+              <Link href="/authority/dashboard">
+                <Button
+                  variant={isActive('/authority/dashboard') ? "light" : "subtle"}
+                  color="blue"
+                  size="compact-sm"
+                  leftSection={<BarChart4 size={16} />}
+                >
+                  Dashboard
+                </Button>
+              </Link>
+              <Link href="/authority/issue">
+                <Button
+                  variant={isActive('/authority/issue') ? "light" : "subtle"}
+                  color="blue"
+                  size="compact-sm"
+                  leftSection={<FileCheck size={16} />}
+                >
+                  Issue Credentials
+                </Button>
+              </Link>
+              <Link href="/authority/audit-logs">
+                <Button
+                  variant={isActive('/authority/audit-logs') ? "light" : "subtle"}
+                  color="blue"
+                  size="compact-sm"
+                  leftSection={<ClipboardList size={16} />}
+                >
+                  Audit Logs
+                </Button>
+              </Link>
+            </>
+          )}
+
+          <Divider orientation="vertical" />
+
+          {/* User Menu */}
+          <Menu shadow="md" width={200} position="bottom-end">
+            <Menu.Target>
+              <UnstyledButton>
+                <Group gap="xs">
+                  <Avatar color="blue" radius="xl" size="sm">
+                    {(user.displayName || user.username).charAt(0).toUpperCase()}
+                  </Avatar>
+                  <Box style={{ flexGrow: 1 }}>
+                    <Text size="sm" fw={500}>
+                      {user.displayName || user.username}
+                    </Text>
+                    <Text size="xs" c="dimmed" tt="uppercase">
+                      {user.role}
+                    </Text>
+                  </Box>
+                </Group>
+              </UnstyledButton>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Label>Account</Menu.Label>
+              <Menu.Item 
+                leftSection={<User size={14} />}
+                component={Link} 
+                href="/dashboard/profile"
               >
-                <HomeIcon className="w-4 h-4" />
-                <span className="hidden sm:inline text-xs font-medium">Home</span>
-              </Button>
-            </Link>
-
-            {/* Mantine Example Link */}
-            <Link href="/mantine-example">
-              <Button 
-                variant={isActive('/mantine-example') ? "default" : "ghost"} 
-                size="sm" 
-                className={cn(
-                  "flex items-center gap-1.5 rounded-md h-9",
-                  isActive('/mantine-example') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                )}
+                My Profile
+              </Menu.Item>
+              <Menu.Item 
+                leftSection={<Award size={14} />}
+                component={Link} 
+                href="/dashboard/credentials"
               >
-                <HomeIcon className="w-4 h-4" /> {/* Using HomeIcon as a placeholder; replace with appropriate icon */}
-                <span className="hidden sm:inline text-xs font-medium">Mantine UI</span>
-              </Button>
-            </Link>
-
-
-            {/* User-specific navigation */}
-            {user.role === 'user' && (
-              <>
-                <Link href="/dashboard">
-                  <Button 
-                    variant={isActive('/dashboard') ? "default" : "ghost"} 
-                    size="sm" 
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md h-9",
-                      isActive('/dashboard') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                    )}
-                  >
-                    <BrainCircuit className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs font-medium">Find Providers</span>
-                  </Button>
-                </Link>
-                <Link href="/dashboard/profile">
-                  <Button 
-                    variant={isActive('/dashboard/profile') ? "default" : "ghost"} 
-                    size="sm" 
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md h-9",
-                      isActive('/dashboard/profile') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                    )}
-                  >
-                    <User className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs font-medium">Profile</span>
-                  </Button>
-                </Link>
-              </>
-            )}
-
-            {/* Provider-specific navigation */}
-            {user.role === 'provider' && (
-              <>
-                <Link href="/dashboard">
-                  <Button 
-                    variant={isActive('/dashboard') ? "default" : "ghost"} 
-                    size="sm" 
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md h-9",
-                      isActive('/dashboard') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                    )}
-                  >
-                    <User className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs font-medium">Profile</span>
-                  </Button>
-                </Link>
-                <Link href="/dashboard/credentials">
-                  <Button 
-                    variant={isActive('/dashboard/credentials') ? "default" : "ghost"} 
-                    size="sm" 
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md h-9",
-                      isActive('/dashboard/credentials') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                    )}
-                  >
-                    <Award className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs font-medium">Credentials</span>
-                  </Button>
-                </Link>
-              </>
-            )}
-
-            {/* Authority-specific navigation */}
-            {user.role === 'authority' && (
-              <>
-                <Link href="/authority/dashboard">
-                  <Button 
-                    variant={isActive('/authority/dashboard') ? "default" : "ghost"} 
-                    size="sm" 
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md h-9",
-                      isActive('/authority/dashboard') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                    )}
-                  >
-                    <BarChart4 className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs font-medium">Dashboard</span>
-                  </Button>
-                </Link>
-                <Link href="/authority/issue">
-                  <Button 
-                    variant={isActive('/authority/issue') ? "default" : "ghost"} 
-                    size="sm" 
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md h-9",
-                      isActive('/authority/issue') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                    )}
-                  >
-                    <FileCheck className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs font-medium">Issue Credentials</span>
-                  </Button>
-                </Link>
-                <Link href="/authority/audit-logs">
-                  <Button 
-                    variant={isActive('/authority/audit-logs') ? "default" : "ghost"} 
-                    size="sm" 
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-md h-9",
-                      isActive('/authority/audit-logs') ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
-                    )}
-                  >
-                    <ClipboardList className="w-4 h-4" />
-                    <span className="hidden sm:inline text-xs font-medium">Audit Logs</span>
-                  </Button>
-                </Link>
-              </>
-            )}
-
-            {/* User Info, Theme Toggle and Logout */}
-            <div className="flex items-center pl-3 ml-3 border-l border-border">
-              <div className="flex flex-col mr-2 text-xs">
-                <div className="font-medium text-foreground">{user.displayName || user.username}</div>
-                <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{user.role}</div>
-              </div>
-              {/* Theme Toggle */}
-              <ModeToggle className="mr-1" />
-              {/* Logout Button */}
-              <Button 
-                variant="ghost" 
-                size="sm" 
+                My Credentials
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item 
+                color="red" 
+                leftSection={<LogOut size={14} />}
                 onClick={logout}
-                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full w-8 h-8 p-0 flex items-center justify-center"
               >
-                <LogOut className="w-4 h-4" />
-                <span className="sr-only">Log out</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                Logout
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
+      </Group>
+    </AppShell.Header>
   );
 }
