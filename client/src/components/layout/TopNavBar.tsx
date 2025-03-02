@@ -39,7 +39,7 @@ export default function TopNavBar() {
   };
 
   return (
-    <AppShell.Header p="xs">
+    <AppShell.Header p="xs" style={{ backgroundColor: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
       <Group justify="space-between" h="100%">
         {/* Logo */}
         <Group>
@@ -194,14 +194,6 @@ export default function TopNavBar() {
                 href="/dashboard/profile"
               >
                 My Profile
-              </Menu.Item>
-              <Menu.Item 
-                leftSection={<User size="14" />}
-                component={Link} 
-                href="/dashboard/profile-mantine"
-                c="dimmed"
-              >
-                Mantine Profile (Dev)
               </Menu.Item>
               <Menu.Item 
                 leftSection={<Award size="14" />}

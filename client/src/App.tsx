@@ -13,8 +13,7 @@ import AuditLogs from "@/pages/authority/AuditLogs";
 import { Toaster } from "@/components/ui/toaster";
 import { AppShell, Container, Text, Loader, Center, MantineProvider } from '@mantine/core';
 
-// Lazy loaded components
-const UserProfileMantine = React.lazy(() => import("@/pages/user-profile-mantine"));
+// All components are now directly imported
 
 function App() {
   return (
@@ -39,7 +38,6 @@ function App() {
                 <Route path="/" component={Home} />
                 <Route path="/dashboard" component={Dashboard} />
                 <Route path="/dashboard/profile" component={UserProfile} />
-                <Route path="/dashboard/profile-mantine" component={UserProfileMantine} />
                 <Route path="/dashboard/credentials" component={Dashboard} />
                 <Route path="/provider/:id" component={ProviderProfile} />
                 
@@ -48,12 +46,6 @@ function App() {
                 <Route path="/authority/issue" component={IssueCredential} />
                 <Route path="/authority/providers" component={NotFound} /> {/* Will implement later */}
                 <Route path="/authority/audit-logs" component={AuditLogs} />
-                
-                {/* Mantine Example Route */}
-                <Route path="/mantine-example" component={() => {
-                  const { MantineExample } = require('@/components/mantine-example');
-                  return <MantineExample />;
-                }} />
                 
                 <Route component={NotFound} />
               </Switch>
