@@ -50,7 +50,7 @@ export default function TopNavBar() {
                 radius="md"
                 style={{ width: rem(36), height: rem(36) }}
               >
-                <Shield size={20} stroke={2.5} />
+                <Shield size="20" strokeWidth={2.5} />
               </Avatar>
               <Box>
                 <Title order={4} fw={700} c="blue">MedCred</Title>
@@ -68,7 +68,7 @@ export default function TopNavBar() {
               variant={isActive('/') ? "light" : "subtle"}
               color="blue"
               size="compact-sm"
-              leftSection={<HomeIcon size={16} />}
+              leftSection={<HomeIcon size="16" />}
             >
               Home
             </Button>
@@ -80,7 +80,7 @@ export default function TopNavBar() {
               variant={isActive('/mantine-example') ? "light" : "subtle"}
               color="blue"
               size="compact-sm"
-              leftSection={<Palette size={16} />}
+              leftSection={<Palette size="16" />}
             >
               Mantine UI
             </Button>
@@ -94,7 +94,7 @@ export default function TopNavBar() {
                   variant={isActive('/dashboard') ? "light" : "subtle"}
                   color="blue"
                   size="compact-sm"
-                  leftSection={<BrainCircuit size={16} />}
+                  leftSection={<BrainCircuit size="16" />}
                 >
                   Find Providers
                 </Button>

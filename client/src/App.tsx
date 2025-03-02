@@ -1,3 +1,4 @@
+import React from 'react';
 import { Switch, Route } from "wouter";
 import { AuthProvider } from "./hooks/use-auth";
 import TopNavBar from "@/components/layout/TopNavBar";
@@ -11,7 +12,10 @@ import IssueCredential from "@/pages/authority/IssueCredential";
 import AuditLogs from "@/pages/authority/AuditLogs";
 import { Toaster } from "@/components/ui/toaster";
 import { MantineExample } from "@/components/mantine-example";
-import { AppShell, Container, Text } from '@mantine/core';
+import { AppShell, Container, Text, Loader, Center } from '@mantine/core';
+
+// Lazy loaded components
+const UserProfileMantine = React.lazy(() => import("@/pages/user-profile-mantine"));
 
 function App() {
   return (
@@ -27,25 +31,31 @@ function App() {
         {/* Main Content */}
         <AppShell.Main>
           <Container size="lg">
-            <Switch>
-              <Route path="/" component={Home} />
-              <Route path="/dashboard" component={Dashboard} />
-              <Route path="/dashboard/profile" component={UserProfile} />
-              <Route path="/dashboard/profile-mantine" component={() => import("@/pages/user-profile-mantine").then(module => module.default())} />
-              <Route path="/dashboard/credentials" component={Dashboard} />
-              <Route path="/provider/:id" component={ProviderProfile} />
-              
-              {/* Authority Routes */}
-              <Route path="/authority/dashboard" component={AuthorityDashboard} />
-              <Route path="/authority/issue" component={IssueCredential} />
-              <Route path="/authority/providers" component={NotFound} /> {/* Will implement later */}
-              <Route path="/authority/audit-logs" component={AuditLogs} />
-              
-              {/* Mantine Example Route */}
-              <Route path="/mantine-example" component={() => <MantineExample />} />
-              
-              <Route component={NotFound} />
-            </Switch>
+            <React.Suspense fallback={
+              <Center style={{ height: '50vh' }}>
+                <Loader color="blue" size="lg" />
+              </Center>
+            }>
+              <Switch>
+                <Route path="/" component={Home} />
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/dashboard/profile" component={UserProfile} />
+                <Route path="/dashboard/profile-mantine" component={UserProfileMantine} />
+                <Route path="/dashboard/credentials" component={Dashboard} />
+                <Route path="/provider/:id" component={ProviderProfile} />
+                
+                {/* Authority Routes */}
+                <Route path="/authority/dashboard" component={AuthorityDashboard} />
+                <Route path="/authority/issue" component={IssueCredential} />
+                <Route path="/authority/providers" component={NotFound} /> {/* Will implement later */}
+                <Route path="/authority/audit-logs" component={AuditLogs} />
+                
+                {/* Mantine Example Route */}
+                <Route path="/mantine-example" component={() => <MantineExample />} />
+                
+                <Route component={NotFound} />
+              </Switch>
+            </React.Suspense>
           </Container>
         </AppShell.Main>
         
