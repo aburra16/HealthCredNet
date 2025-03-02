@@ -31,6 +31,7 @@ export function ThemeProvider({
   );
 
   useEffect(() => {
+    console.log('Theme effect triggered, theme:', theme);
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
 
@@ -38,10 +39,12 @@ export function ThemeProvider({
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
+      console.log('System theme detected:', systemTheme);
       root.classList.add(systemTheme);
       return;
     }
 
+    console.log('Setting theme class:', theme);
     root.classList.add(theme);
   }, [theme]);
 
