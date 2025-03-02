@@ -22,7 +22,7 @@ export default function Header() {
   if (!user) return null;
   
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100" style={{ backgroundColor: 'white', backdropFilter: 'none', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
