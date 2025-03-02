@@ -11,8 +11,7 @@ import AuthorityDashboard from "@/pages/authority/Dashboard";
 import IssueCredential from "@/pages/authority/IssueCredential";
 import AuditLogs from "@/pages/authority/AuditLogs";
 import { Toaster } from "@/components/ui/toaster";
-import { MantineExample } from "@/components/mantine-example";
-import { AppShell, Container, Text, Loader, Center } from '@mantine/core';
+import { AppShell, Container, Text, Loader, Center, MantineProvider } from '@mantine/core';
 
 // Lazy loaded components
 const UserProfileMantine = React.lazy(() => import("@/pages/user-profile-mantine"));
@@ -51,7 +50,10 @@ function App() {
                 <Route path="/authority/audit-logs" component={AuditLogs} />
                 
                 {/* Mantine Example Route */}
-                <Route path="/mantine-example" component={() => <MantineExample />} />
+                <Route path="/mantine-example" component={() => {
+                  const { MantineExample } = require('@/components/mantine-example');
+                  return <MantineExample />;
+                }} />
                 
                 <Route component={NotFound} />
               </Switch>

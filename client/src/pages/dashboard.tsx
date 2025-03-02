@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation, Route, Switch } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { Container, Paper, Loader, Center } from "@mantine/core";
 import SearchProviders from "@/components/user/search-providers";
 import ProviderProfile from "@/components/provider/provider-profile";
 import ProviderCredentials from "@/components/provider/provider-credentials";
@@ -23,7 +24,13 @@ export default function Dashboard() {
   
   // Determine which component to render based on user role
   const renderRoleBasedContent = () => {
-    if (!user) return null;
+    if (!user) {
+      return (
+        <Center h={300}>
+          <Loader color="blue" size="lg" />
+        </Center>
+      );
+    }
     
     switch (user.role) {
       case 'user':
@@ -58,10 +65,10 @@ export default function Dashboard() {
   if (!isAuthenticated || !user) return null;
   
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <Paper py="md" component="div">
+      <Container size="xl">
         {renderRoleBasedContent()}
-      </main>
-    </div>
+      </Container>
+    </Paper>
   );
 }
