@@ -26,6 +26,7 @@ import {
   UnstyledButton,
   Box
 } from '@mantine/core';
+import { medCredTheme } from "@/lib/theme";
 
 export default function TopNavBar() {
   const { user, logout } = useAuth();
@@ -39,21 +40,21 @@ export default function TopNavBar() {
   };
 
   return (
-    <AppShell.Header p="xs" style={{ backgroundColor: 'white', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+    <AppShell.Header p="xs" style={{ backgroundColor: 'white', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)' }}>
       <Group justify="space-between" h="100%">
         {/* Logo */}
         <Group>
           <Link href="/">
             <Group gap={rem(10)}>
               <Avatar 
-                color="blue" 
+                color="medical-blue" 
                 radius="md"
                 style={{ width: rem(36), height: rem(36) }}
               >
                 <Shield size="20" strokeWidth={2.5} />
               </Avatar>
               <Box>
-                <Title order={4} fw={700} c="blue">MedCred</Title>
+                <Title order={4} fw={700} c="medical-blue.6">MedCred</Title>
                 <Text size="xs" tt="uppercase" c="dimmed" fw={500} lts={1}>Trusted Verifications</Text>
               </Box>
             </Group>
@@ -66,7 +67,7 @@ export default function TopNavBar() {
           <Link href="/">
             <Button
               variant={isActive('/') ? "light" : "subtle"}
-              color="blue"
+              color="medical-blue"
               size="compact-sm"
               leftSection={<HomeIcon size="16" />}
             >
@@ -82,7 +83,7 @@ export default function TopNavBar() {
               <Link href="/dashboard">
                 <Button
                   variant={isActive('/dashboard') ? "light" : "subtle"}
-                  color="blue"
+                  color="medical-blue"
                   size="compact-sm"
                   leftSection={<BrainCircuit size="16" />}
                 >
@@ -92,7 +93,7 @@ export default function TopNavBar() {
               <Link href="/dashboard/profile">
                 <Button
                   variant={isActive('/dashboard/profile') ? "light" : "subtle"}
-                  color="blue"
+                  color="medical-blue"
                   size="compact-sm"
                   leftSection={<User size="16" />}
                 >
@@ -108,7 +109,7 @@ export default function TopNavBar() {
               <Link href="/dashboard">
                 <Button
                   variant={isActive('/dashboard') ? "light" : "subtle"}
-                  color="blue"
+                  color="medical-blue"
                   size="compact-sm"
                   leftSection={<User size="16" />}
                 >
@@ -118,7 +119,7 @@ export default function TopNavBar() {
               <Link href="/dashboard/credentials">
                 <Button
                   variant={isActive('/dashboard/credentials') ? "light" : "subtle"}
-                  color="blue"
+                  color="healing-teal"
                   size="compact-sm"
                   leftSection={<Award size="16" />}
                 >
@@ -134,7 +135,7 @@ export default function TopNavBar() {
               <Link href="/authority/dashboard">
                 <Button
                   variant={isActive('/authority/dashboard') ? "light" : "subtle"}
-                  color="blue"
+                  color="medical-blue"
                   size="compact-sm"
                   leftSection={<BarChart4 size="16" />}
                 >
@@ -144,7 +145,7 @@ export default function TopNavBar() {
               <Link href="/authority/issue">
                 <Button
                   variant={isActive('/authority/issue') ? "light" : "subtle"}
-                  color="blue"
+                  color="trust-purple"
                   size="compact-sm"
                   leftSection={<FileCheck size="16" />}
                 >
@@ -154,7 +155,7 @@ export default function TopNavBar() {
               <Link href="/authority/audit-logs">
                 <Button
                   variant={isActive('/authority/audit-logs') ? "light" : "subtle"}
-                  color="blue"
+                  color="healing-teal"
                   size="compact-sm"
                   leftSection={<ClipboardList size="16" />}
                 >
@@ -171,14 +172,23 @@ export default function TopNavBar() {
             <Menu.Target>
               <UnstyledButton>
                 <Group gap="xs">
-                  <Avatar color="blue" radius="xl" size="sm">
+                  <Avatar 
+                    color={user.role === 'authority' ? 'trust-purple' : user.role === 'provider' ? 'healing-teal' : 'medical-blue'} 
+                    radius="xl" 
+                    size="sm"
+                  >
                     {(user.displayName || user.username).charAt(0).toUpperCase()}
                   </Avatar>
                   <Box style={{ flexGrow: 1 }}>
                     <Text size="sm" fw={500}>
                       {user.displayName || user.username}
                     </Text>
-                    <Text size="xs" c="dimmed" tt="uppercase">
+                    <Text 
+                      size="xs" 
+                      c={user.role === 'authority' ? 'trust-purple.7' : user.role === 'provider' ? 'healing-teal.7' : 'medical-blue.7'} 
+                      tt="uppercase" 
+                      fw={500}
+                    >
                       {user.role}
                     </Text>
                   </Box>
@@ -192,6 +202,7 @@ export default function TopNavBar() {
                 leftSection={<User size="14" />}
                 component={Link} 
                 href="/dashboard/profile"
+                color="medical-blue"
               >
                 My Profile
               </Menu.Item>
@@ -199,12 +210,13 @@ export default function TopNavBar() {
                 leftSection={<Award size="14" />}
                 component={Link} 
                 href="/dashboard/credentials"
+                color="healing-teal"
               >
                 My Credentials
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item 
-                color="red" 
+                color="error" 
                 leftSection={<LogOut size="14" />}
                 onClick={logout}
               >
