@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, Route, Switch } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import Header from "@/components/layout/header";
 import SearchProviders from "@/components/user/search-providers";
 import ProviderProfile from "@/components/provider/provider-profile";
 import ProviderCredentials from "@/components/provider/provider-credentials";
@@ -60,7 +59,6 @@ export default function Dashboard() {
   
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {renderRoleBasedContent()}
       </main>
