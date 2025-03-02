@@ -28,28 +28,6 @@
     --radius: 0.5rem;
   }
 
-  .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 215 20.2% 65.1%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --primary: 240 65% 70%;  /* Brighter primary in dark mode */
-    --primary-foreground: 210 40% 98%;
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
-    --accent: 212 100% 47%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --ring: 240 65% 70%;
-  }
-
   * {
     @apply border-border;
   }
@@ -147,38 +125,13 @@
   
   /* Modern Card Styling - Visualens Inspired */
   .card {
-    @apply bg-card text-card-foreground rounded-[20px] transition-all duration-300 overflow-hidden relative border-0;
-  }
-  
-  /* Light mode card styling */
-  :root .card {
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Dark mode card styling */
-  .dark .card {
-    background-color: hsl(var(--card));
-    color: hsl(var(--card-foreground));
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+    @apply bg-white rounded-[20px] shadow-[0_4px_25px_rgba(0,0,0,0.05)] transition-all duration-300 overflow-hidden relative border-0;
   }
   
   /* Advanced layered card with subtle shadows */  
   .visualens-card {
-    @apply relative rounded-[20px] transition-all duration-300 bg-card text-card-foreground;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-  }
-
-  /* Light mode specific styling */
-  :root .visualens-card {
+    @apply relative bg-white rounded-[20px] shadow-[0_10px_30px_rgba(0,0,0,0.04)] transition-all duration-300;
     background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
-  }
-  
-  /* Dark mode specific styling */
-  .dark .visualens-card {
-    background: linear-gradient(180deg, hsl(224 71% 4% / 0.95) 0%, hsl(224 71% 6% / 0.97) 100%);
-    box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.05),
-      0 10px 30px rgba(0, 0, 0, 0.2);
   }
   
   .visualens-card::before {
@@ -187,19 +140,8 @@
   }
   
   .visualens-card:hover {
+    @apply shadow-[0_15px_35px_rgba(0,0,0,0.08)];
     transform: translateY(-2px);
-  }
-  
-  /* Light mode hover effects */
-  :root .visualens-card:hover {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-  }
-  
-  /* Dark mode hover effects */
-  .dark .visualens-card:hover {
-    box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 15px 35px rgba(0, 0, 0, 0.3);
   }
   
   .visualens-card:hover::before {
@@ -208,13 +150,7 @@
 
   /* Modern metallic card with subtle dimensionality */
   .visualens-gradient-card {
-    @apply p-0 m-0 relative rounded-[20px] bg-card text-card-foreground;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  /* Light mode styling */
-  :root .visualens-gradient-card {
+    @apply p-0 m-0 relative rounded-[20px];
     background: linear-gradient(135deg, 
       rgba(245, 247, 250, 0.97) 0%,
       rgba(240, 242, 247, 0.95) 100%);
@@ -223,18 +159,7 @@
       0 12px 24px -6px rgba(15, 23, 42, 0.08),
       0 4px 6px -2px rgba(15, 23, 42, 0.03),
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
-  }
-  
-  /* Dark mode styling */
-  .dark .visualens-gradient-card {
-    background: linear-gradient(135deg, 
-      rgba(26, 28, 35, 0.95) 0%,
-      rgba(17, 19, 26, 0.98) 100%);
-    box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.05),
-      0 12px 24px -6px rgba(0, 0, 0, 0.3),
-      0 4px 6px -2px rgba(0, 0, 0, 0.2),
-      inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+    overflow: hidden;
   }
   
   /* Refined metallic content area */
@@ -264,10 +189,6 @@
   /* Form element common styles - Visualens inspired */
   .form-input {
     @apply block w-full rounded-xl py-3.5 px-4 text-foreground transition-all duration-200 ease-in-out;
-  }
-  
-  /* Light mode input styling */
-  :root .form-input {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 247, 250, 0.85) 100%);
     box-shadow: 
       0 0 0 1px rgba(180, 190, 210, 0.2),
@@ -275,7 +196,7 @@
       inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
   }
   
-  :root .form-input:focus {
+  .form-input:focus {
     @apply outline-none;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 252, 255, 0.92) 100%);
     box-shadow: 
@@ -284,27 +205,9 @@
       inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
   }
   
-  /* Dark mode input styling */
-  .dark .form-input {
-    background: linear-gradient(180deg, rgba(35, 38, 45, 0.9) 0%, rgba(30, 33, 40, 0.95) 100%);
-    box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 1px 2px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  }
-  
-  .dark .form-input:focus {
-    @apply outline-none;
-    background: linear-gradient(180deg, rgba(40, 44, 52, 0.95) 0%, rgba(35, 39, 47, 0.98) 100%);
-    box-shadow: 
-      0 0 0 2px rgba(90, 120, 255, 0.3),
-      0 1px 2px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  }
-  
   /* Modern table styling - Visualens inspired */
   .table-modern {
-    @apply min-w-full divide-y divide-border overflow-hidden rounded-xl;
+    @apply min-w-full divide-y divide-gray-100 overflow-hidden rounded-xl;
   }
   
   .table-modern thead {
@@ -315,30 +218,16 @@
     @apply px-6 py-4 text-left text-xs font-medium uppercase tracking-wider;
   }
   
-  /* Light mode table */
-  :root .table-modern tbody {
+  .table-modern tbody {
     @apply bg-white;
   }
   
-  :root .table-modern tbody tr {
+  .table-modern tbody tr {
     @apply hover:bg-gray-50/50 transition-colors duration-150;
   }
   
-  :root .table-modern td {
+  .table-modern td {
     @apply px-6 py-4 whitespace-nowrap text-sm text-gray-600;
-  }
-  
-  /* Dark mode table */
-  .dark .table-modern tbody {
-    @apply bg-card;
-  }
-  
-  .dark .table-modern tbody tr {
-    @apply hover:bg-muted/50 transition-colors duration-150;
-  }
-  
-  .dark .table-modern td {
-    @apply px-6 py-4 whitespace-nowrap text-sm text-muted-foreground;
   }
   
   /* Layout classes */
@@ -422,11 +311,7 @@
 
   /* Healthcare specific components */
   .credential-card {
-    @apply rounded-xl overflow-hidden transition-all duration-200 relative text-foreground;
-  }
-  
-  /* Light mode credential card */
-  :root .credential-card {
+    @apply rounded-xl overflow-hidden transition-all duration-200 relative;
     background: linear-gradient(135deg, rgba(245, 247, 250, 0.97) 0%, rgba(240, 242, 247, 0.95) 100%);
     box-shadow: 
       0 0 0 1px rgba(180, 190, 210, 0.2),
@@ -434,33 +319,13 @@
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
   }
   
-  :root .credential-card:hover {
+  .credential-card:hover {
     transform: translateY(-2px);
     box-shadow: 
       0 0 0 1px rgba(180, 190, 210, 0.25),
       0 8px 24px -4px rgba(15, 23, 42, 0.12),
       0 4px 8px -2px rgba(15, 23, 42, 0.05),
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
-  }
-  
-  /* Dark mode credential card */
-  .dark .credential-card {
-    background: linear-gradient(135deg, 
-      rgba(35, 38, 45, 0.95) 0%, 
-      rgba(28, 31, 38, 0.98) 100%);
-    box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 4px 12px -2px rgba(0, 0, 0, 0.2),
-      inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
-  }
-  
-  .dark .credential-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 0 0 1px rgba(255, 255, 255, 0.15),
-      0 8px 24px -4px rgba(0, 0, 0, 0.3),
-      0 4px 8px -2px rgba(0, 0, 0, 0.2),
-      inset 0 1px 1px 0 rgba(255, 255, 255, 0.07);
   }
   
   .credential-card::after {
@@ -479,18 +344,10 @@
     height: 100%;
   }
   
-  /* Light mode icon background */
-  :root .medical-icon-bg {
+  .medical-icon-bg {
     background: linear-gradient(135deg, rgba(74, 91, 225, 0.15) 0%, rgba(61, 82, 208, 0.1) 100%);
     @apply text-primary p-3 rounded-xl;
     box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
-  }
-  
-  /* Dark mode icon background */
-  .dark .medical-icon-bg {
-    background: linear-gradient(135deg, rgba(74, 91, 225, 0.2) 0%, rgba(61, 82, 208, 0.15) 100%);
-    @apply text-primary p-3 rounded-xl;
-    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
   }
   
   /* Modern hover effects */

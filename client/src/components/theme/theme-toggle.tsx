@@ -4,14 +4,13 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./theme-provider";
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className={className}>
-          <Sun className={`h-5 w-5 transition-all duration-300 ${resolvedTheme === 'dark' ? 'opacity-0 scale-0 -rotate-90' : 'opacity-100 scale-100 rotate-0'}`} />
-          <Moon className={`absolute h-5 w-5 transition-all duration-300 ${resolvedTheme === 'dark' ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-0 rotate-90'}`} />
+          <Sun className="h-5 w-5" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>

@@ -10,70 +10,11 @@ import AuthorityDashboard from "@/pages/authority/Dashboard";
 import IssueCredential from "@/pages/authority/IssueCredential";
 import AuditLogs from "@/pages/authority/AuditLogs";
 import { Toaster } from "@/components/ui/toaster";
-import { useTheme } from "./components/theme/theme-provider";
-import { useEffect } from "react";
-import { Button } from "./components/ui/button";
-
-// Theme Debugger Component
-function ThemeDebugger() {
-  const { theme, resolvedTheme, setTheme } = useTheme();
-  
-  return (
-    <div className="fixed bottom-4 right-4 z-50 bg-card border border-border rounded-xl shadow-lg p-4 text-left w-80">
-      <h3 className="text-lg font-semibold mb-2 text-foreground">Theme Debugger</h3>
-      <div className="space-y-1 text-sm">
-        <p className="text-foreground">
-          Theme setting: <span className="font-mono">{theme}</span>
-        </p>
-        <p className="text-foreground">
-          Resolved theme: <span className="font-mono">{resolvedTheme}</span>
-        </p>
-        <p className="text-foreground">
-          HTML class: <span className="font-mono">{document.documentElement.classList.contains('dark') ? 'dark' : 'light'}</span>
-        </p>
-      </div>
-      <div className="grid grid-cols-3 gap-2 mt-3">
-        <Button 
-          size="sm"
-          onClick={() => setTheme('light')}
-          variant={theme === 'light' ? 'default' : 'outline'}
-        >
-          Light
-        </Button>
-        <Button 
-          size="sm"
-          onClick={() => setTheme('dark')}
-          variant={theme === 'dark' ? 'default' : 'outline'}
-        >
-          Dark
-        </Button>
-        <Button 
-          size="sm"
-          onClick={() => setTheme('system')}
-          variant={theme === 'system' ? 'default' : 'outline'}
-        >
-          System
-        </Button>
-      </div>
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        <div className="bg-background border border-border p-2 text-xs rounded">
-          bg-background
-        </div>
-        <div className="bg-card border border-border p-2 text-xs rounded">
-          bg-card
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function App() {
-  const { resolvedTheme } = useTheme();
-  
-  // Force a rerender when the theme changes by using a key
   return (
     <AuthProvider>
-      <div key={`theme-${resolvedTheme}`} className="visualens-accent-top min-h-screen bg-background flex flex-col">
+      <div className="visualens-accent-top min-h-screen bg-background flex flex-col">
         {/* Global Navigation Bar */}
         <TopNavBar />
         
@@ -109,9 +50,6 @@ function App() {
           </div>
         </footer>
       </div>
-      
-      {/* Theme Debugger */}
-      <ThemeDebugger />
       
       {/* Toast Notifications */}
       <Toaster />
