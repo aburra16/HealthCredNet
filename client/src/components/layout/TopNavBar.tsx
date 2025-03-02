@@ -74,17 +74,7 @@ export default function TopNavBar() {
             </Button>
           </Link>
 
-          {/* Mantine Example Link */}
-          <Link href="/mantine-example">
-            <Button
-              variant={isActive('/mantine-example') ? "light" : "subtle"}
-              color="blue"
-              size="compact-sm"
-              leftSection={<Palette size="16" />}
-            >
-              Mantine UI
-            </Button>
-          </Link>
+
 
           {/* User-specific navigation */}
           {user.role === 'user' && (
