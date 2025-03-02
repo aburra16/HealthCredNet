@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ModeToggle } from "@/components/theme/mode-toggle";
 
 export default function TopNavBar() {
   const { user, logout } = useAuth();
@@ -166,12 +167,15 @@ export default function TopNavBar() {
               </>
             )}
             
-            {/* User Info and Logout */}
+            {/* User Info, Theme Toggle and Logout */}
             <div className="flex items-center pl-3 ml-3 border-l border-border">
               <div className="flex flex-col mr-2 text-xs">
                 <div className="font-medium text-foreground">{user.displayName || user.username}</div>
                 <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{user.role}</div>
               </div>
+              {/* Theme Toggle */}
+              <ModeToggle className="mr-1" />
+              {/* Logout Button */}
               <Button 
                 variant="ghost" 
                 size="sm" 
